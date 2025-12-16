@@ -206,7 +206,7 @@ class EpisodeCreator:
         output = []
         episodes = []
         for rec in table:
-            if rec['source'] == 'GooglePhotos':
+            if rec['source'] in ['GooglePhotos', 'FacebookPosts']:
                 output.append({'start_time': rec['startTime'],
                             'end_time': rec['endTime'],
                             'textDescription': rec['textDescription'],

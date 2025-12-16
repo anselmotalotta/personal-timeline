@@ -19,7 +19,8 @@ import os
 
 from src.common.persistence.personal_data_db import PersonalDataDBConnector
 from src.ingest.enrichment.geo_enrichment import LocationEnricher
-from src.ingest.enrichment.image_enrichment import ImageEnricher
+# Import ImageEnricher only when needed to avoid torch dependency
+# from src.ingest.enrichment.image_enrichment import ImageEnricher
 
 from src.ingest.export.export_entities import PhotoExporter
 from src.ingest.importers.generic_importer_workflow import GenericImportOrchestrator
@@ -58,14 +59,19 @@ if __name__ == '__main__':
             print("Location enrichment complete")
         if action == 'image_enrich':
             print("Running Image enrichment now...")
-            # sleep(2)
-            le = ImageEnricher()
-            if os.getenv("incremental_image_enrich") is not None and os.environ["incremental_image_enrich"]!='':
-                image_enrich_increments = True if os.environ["incremental_image_enrich"] == "True" else False
-                le.enrich(image_enrich_increments)
-            else:
-                le.enrich()
-            print("Image enrichment complete")
+            # Import here to avoid torch dependency if not needed
+            try:
+                from src.ingest.enrichment.image_enrichment import ImageEnricher
+                le = ImageEnricher()
+                if os.getenv("incremental_image_enrich") is not None and os.environ["incremental_image_enrich"]!='':
+                    image_enrich_increments = True if os.environ["incremental_image_enrich"] == "True" else False
+                    le.enrich(image_enrich_increments)
+                else:
+                    le.enrich()
+                print("Image enrichment complete")
+            except ImportError as e:
+                print(f"⚠️  Image enrichment skipped - missing dependencies (torch): {e}")
+                print("   Install torch and transformers to enable image enrichment")
         if action == 'export':
             print("Exporting enriched data to enriched_data...")
             ex = PhotoExporter()
