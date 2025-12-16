@@ -14,16 +14,48 @@
 
 
 
-from langchain.chat_models import ChatOpenAI
-from langchain.prompts import (
-    ChatPromptTemplate, 
-    MessagesPlaceholder, 
-    SystemMessagePromptTemplate, 
-    HumanMessagePromptTemplate
-)
-from langchain.chains import ConversationChain
-from langchain.chat_models import ChatOpenAI
-from langchain.memory import ConversationBufferMemory
+# Try new imports first, fall back to old ones
+try:
+    # New import style (langchain >= 0.1.0)
+    from langchain_openai import ChatOpenAI
+    from langchain.prompts import (
+        ChatPromptTemplate, 
+        MessagesPlaceholder, 
+        SystemMessagePromptTemplate, 
+        HumanMessagePromptTemplate
+    )
+    from langchain.chains import ConversationChain
+    from langchain.memory import ConversationBufferMemory
+except ImportError:
+    try:
+        # Old import style (langchain < 0.1.0)
+        from langchain.chat_models import ChatOpenAI
+        from langchain.prompts import (
+            ChatPromptTemplate, 
+            MessagesPlaceholder, 
+            SystemMessagePromptTemplate, 
+            HumanMessagePromptTemplate
+        )
+        from langchain.chains import ConversationChain
+        from langchain.chat_models import ChatOpenAI
+        from langchain.memory import ConversationBufferMemory
+    except ImportError as e:
+        print(f"⚠️ ChatGPT engine import error: {e}")
+        # Set dummy classes
+        class ChatOpenAI:
+            pass
+        class ChatPromptTemplate:
+            pass
+        class MessagesPlaceholder:
+            pass
+        class SystemMessagePromptTemplate:
+            pass
+        class HumanMessagePromptTemplate:
+            pass
+        class ConversationChain:
+            pass
+        class ConversationBufferMemory:
+            pass
 
 class ChatGPTEngine:
     def __init__(self):

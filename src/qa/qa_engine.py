@@ -17,15 +17,44 @@
 import pandas as pd
 import pickle
 import os
-import langchain
-from langchain.cache import InMemoryCache
-langchain.llm_cache = InMemoryCache()
 
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.chains import VectorDBQAWithSourcesChain
-from langchain import OpenAI
-from langchain.vectorstores import FAISS
-from langchain.prompts import PromptTemplate
+# Try new langchain imports first, fall back to old ones
+try:
+    # New import style (langchain >= 0.1.0)
+    from langchain_openai import OpenAIEmbeddings, OpenAI
+    from langchain.chains import VectorDBQAWithSourcesChain
+    from langchain_community.vectorstores import FAISS
+    from langchain.prompts import PromptTemplate
+    from langchain.globals import set_llm_cache
+    from langchain.cache import InMemoryCache
+    set_llm_cache(InMemoryCache())
+    LANGCHAIN_NEW = True
+except ImportError:
+    try:
+        # Old import style (langchain < 0.1.0)
+        import langchain
+        from langchain.cache import InMemoryCache
+        langchain.llm_cache = InMemoryCache()
+        from langchain.embeddings.openai import OpenAIEmbeddings
+        from langchain.chains import VectorDBQAWithSourcesChain
+        from langchain import OpenAI
+        from langchain.vectorstores import FAISS
+        from langchain.prompts import PromptTemplate
+        LANGCHAIN_NEW = False
+    except ImportError as e:
+        print(f"⚠️ LangChain import error: {e}")
+        LANGCHAIN_NEW = False
+        # Set dummy classes to avoid further errors
+        class OpenAIEmbeddings:
+            pass
+        class OpenAI:
+            pass
+        class FAISS:
+            pass
+        class PromptTemplate:
+            pass
+        class VectorDBQAWithSourcesChain:
+            pass
 
 from datetime import datetime
 
