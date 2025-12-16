@@ -2,16 +2,74 @@
 
 # TimelineBuilder
 
+> **Note**: This is a fork of [facebookresearch/personal-timeline](https://github.com/facebookresearch/personal-timeline) with enhanced Docker support and configuration fixes, developed with [OpenHands](https://github.com/All-Hands-AI/OpenHands) AI assistant.
+
+## Key Improvements in This Fork
+
+- ✅ **Full Docker support** with working volume mounts and data paths
+- ✅ **Fixed dependency issues** (ajv, node modules)
+- ✅ **Simplified startup scripts** for Docker operations
+- ✅ **Updated documentation** and troubleshooting guides
+- ✅ **Facebook data importer fixes** - Auto-detection + resilient solution (176 posts imported!)
+- ✅ **Frontend display fixes** - Category JSON files auto-generation
+- ✅ **Bug fixes** - Fixed 2 type inconsistency bugs in photo importer
+
 ## Table of Content
 
+- [Quick Start with Docker](#quick-start-with-docker) - **Start here!**
 - [Setup](#general-setup): how to set up for this repo
 - [Importers](#digital-data-importers): how to create LifeLog entries from several data sources.
   - [Downloading Digital Data](#downloading-your-personal-data)
   - [Running the importers](#running-the-code)
-- [Sample Dataset](DATASET.md): a sampled set of anonymized data for testing
+- [Sample Dataset](docs/DATASET.md): a sampled set of anonymized data for testing
 - [Data Visualization](#visualization-of-the-personal-timeline): a ReactJS-based visualization frontend of the personal timeline
 - [Question Answering](#question-answer-over-the-personal-timeline): a LLM-based QA engine over the personal timeline
 - [TimelineQA](#timelineqa-a-benchmark-for-question-answer-over-the-personal-timeline): a synthetic benchmark for evaluating personal timeline QA systems
+- [Documentation](#documentation): additional guides and references
+
+## Quick Start with Docker
+
+**Prerequisites:**
+1. Install [Docker Desktop](https://docs.docker.com/desktop/)
+2. Clone this repo: `git clone https://github.com/anselmotalotta/personal-timeline.git`
+3. Place your data in `../MyData/` (one level up from repo root)
+   - **Facebook**: Full export or just `your_facebook_activity/posts/*.json` (auto-detected)
+   - **Google Photos**: `google_photos/` folder
+
+**Start the application:**
+```bash
+# Start all services
+docker compose up -d
+
+# Watch logs
+docker compose logs -f
+
+# Stop all services
+docker compose down
+```
+
+**Using convenience scripts:**
+```bash
+# Restart everything
+bash scripts/RESTART_DOCKER.sh
+
+# Verify setup
+bash scripts/verify_docker_setup.sh
+
+# Teardown (stop and remove containers)
+bash scripts/teardown.sh
+```
+
+**Access the application:**
+- Frontend UI: http://localhost:52692
+- QA Engine: http://localhost:57485
+
+**What happens on startup:**
+- Backend: Ingests data, enriches with location info, exports to JSON (completes and exits)
+- Frontend: React dev server for timeline visualization (stays running)
+- QA: Flask server for question-answering (stays running)
+
+For detailed Docker setup instructions, see [docs/DOCKER_READY.md](docs/DOCKER_READY.md).
 
 ## General Setup
 
@@ -251,6 +309,23 @@ Please check out the TimelineQA github [repo](https://github.com/facebookresearc
   year={2023}
 }
 ```
+
+## Documentation
+
+### User Guides
+- [DOCKER_READY.md](docs/DOCKER_READY.md) - Complete Docker setup guide
+- [RUN_LOCALLY.md](docs/RUN_LOCALLY.md) - Running without Docker
+- [TROUBLESHOOTING_GUIDE.md](docs/TROUBLESHOOTING_GUIDE.md) - Common issues and solutions
+- [DATASET.md](docs/DATASET.md) - Sample dataset information
+- [MODERNIZATION_GUIDE.md](docs/MODERNIZATION_GUIDE.md) - Modernization notes
+
+### Scripts
+- `scripts/RESTART_DOCKER.sh` - Restart all Docker services
+- `scripts/teardown.sh` - Stop and remove containers
+- `scripts/verify_docker_setup.sh` - Verify Docker configuration
+
+### AI Assistant Files
+Development notes and configuration files used during development with OpenHands are in `docs/ai-assistant/`.
 
 ## License
 

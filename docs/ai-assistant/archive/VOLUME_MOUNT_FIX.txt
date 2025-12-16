@@ -1,0 +1,49 @@
+================================================================================
+CRITICAL FIX: Volume Mount Path Corrected
+================================================================================
+
+ISSUE: Docker containers couldn't access Facebook data because:
+  - docker-compose.yml was mounting: ./MyData
+  - This resolved to: ~/workspace/FacebookPostDownloader/personal-timeline/MyData/
+  - But actual data is at: ~/workspace/FacebookPostDownloader/MyData/
+
+FIX APPLIED:
+  Changed all volume mounts from:
+    - ./MyData:/app/MyData
+  To:
+    - ../MyData:/app/MyData
+
+This goes up one directory level to access the real MyData folder.
+
+AFFECTED SERVICES:
+  ✅ frontend (line 11)
+  ✅ qa (line 28)  
+  ✅ backend (line 44)
+
+================================================================================
+NEXT STEP - NO REBUILD NEEDED:
+================================================================================
+
+Since volume mounts are runtime configuration (not build-time), you only need:
+
+  docker compose down
+  docker compose up -d
+
+Then watch logs:
+
+  docker compose logs -f
+
+================================================================================
+WHAT TO EXPECT:
+================================================================================
+
+Backend should now show:
+  ✅ "Using path: /app/MyData/facebook"
+  ✅ "All json files in path: [list of files]"
+  ✅ "Processing 2 photos..."
+  ✅ "✅ Main workflow completed successfully"
+
+Frontend should:
+  ✅ Start successfully (ajv issue still needs fixing separately)
+
+================================================================================

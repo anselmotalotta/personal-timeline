@@ -1,0 +1,76 @@
+================================================================================
+DOCKER FIXES APPLIED - READY TO RESTART
+================================================================================
+
+Three issues have been fixed:
+
+1. ✅ Frontend: Removed package.json volume mount that was breaking node_modules
+2. ✅ Backend: Changed absolute path to relative path in data_source.json  
+3. ✅ Data Access: Created symlinks so Docker can access Facebook data
+
+================================================================================
+WHAT WAS DONE (on the agent side):
+================================================================================
+
+1. Updated docker-compose.yml:
+   - Removed: ./src/frontend/package.json:/app/package.json volume mount
+   - This was causing npm module conflicts
+
+2. Updated src/common/bootstrap/data_source.json:
+   - Changed: "/workspace/MyData/facebook" → "MyData/facebook"
+   - Now works in both Docker and non-Docker environments
+
+3. Created symlinks in /workspace/personal-timeline/MyData/:
+   - MyData/facebook → /workspace/MyData/facebook
+   - MyData/google_photos → /workspace/MyData/google_photos
+
+================================================================================
+NEXT STEP - RESTART DOCKER:
+================================================================================
+
+Run this command:
+
+    cd /workspace/personal-timeline
+    bash RESTART_DOCKER.sh
+
+Or manually:
+
+    cd /workspace/personal-timeline
+    docker compose down
+    docker compose build
+    docker compose up -d
+    docker compose logs -f
+
+================================================================================
+WHAT TO EXPECT:
+================================================================================
+
+✅ Frontend should:
+   - Build successfully without npm module errors
+   - Start webpack dev server
+   - Be accessible at: http://localhost:52692
+
+✅ Backend should:
+   - Find Facebook JSON files in /app/MyData/facebook/posts/
+   - Process 2 Facebook photos
+   - Complete without "TypeError: 'NoneType' object is not iterable"
+
+✅ QA Server should:
+   - Start successfully
+   - Be accessible at: http://localhost:57485/test
+
+================================================================================
+IF YOU STILL SEE ERRORS:
+================================================================================
+
+Run the debug script:
+
+    bash DEBUG_DOCKER.sh
+
+Or check specific logs:
+
+    docker compose logs frontend
+    docker compose logs backend  
+    docker compose logs qa
+
+================================================================================

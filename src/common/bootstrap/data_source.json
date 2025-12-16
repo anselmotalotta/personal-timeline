@@ -7,7 +7,10 @@
       "input_directory": "personal-data/apple-health",
       "filetype": "xml",
       "filetype_configs": {},
-      "dedup_key": ["source", "startTime"]
+      "dedup_key": [
+        "source",
+        "startTime"
+      ]
     },
     "field_mappings": [
       {
@@ -27,7 +30,9 @@
         "target": "type_count",
         "src_type": "str",
         "target_type": "dict",
-        "functions": ["type_count['$activity']+1"]
+        "functions": [
+          "type_count['$activity']+1"
+        ]
       },
       {
         "src": "startDate",
@@ -71,7 +76,11 @@
       "filetype_configs": {
         "skiprows": 0
       },
-      "dedup_key": ["source","purchase_id","productName"]
+      "dedup_key": [
+        "source",
+        "purchase_id",
+        "productName"
+      ]
     },
     "field_mappings": [
       {
@@ -122,7 +131,11 @@
       "filetype_configs": {
         "skiprows": 0
       },
-      "dedup_key": ["source", "startTime","productName"]
+      "dedup_key": [
+        "source",
+        "startTime",
+        "productName"
+      ]
     },
     "field_mappings": [
       {
@@ -165,7 +178,11 @@
       "input_directory": "personal-data/spotify",
       "filename_regex": "StreamingHistory",
       "filetype": "json",
-      "dedup_key": ["source", "track", "endTime"]
+      "dedup_key": [
+        "source",
+        "track",
+        "endTime"
+      ]
     },
     "field_mappings": [
       {
@@ -211,7 +228,10 @@
       "filetype_configs": {
         "skiprows": 2
       },
-      "dedup_key": ["source","purchase_id"]
+      "dedup_key": [
+        "source",
+        "purchase_id"
+      ]
     },
     "field_mappings": [
       {
@@ -250,7 +270,11 @@
       "filetype_configs": {
         "skiprows": 0
       },
-      "dedup_key": ["source","startTime","productName"]
+      "dedup_key": [
+        "source",
+        "startTime",
+        "productName"
+      ]
     },
     "field_mappings": [
       {
@@ -314,7 +338,7 @@
     "source_name": "FacebookPosts",
     "entry_type": "photo",
     "configs": {
-      "input_directory": "personal-data/facebook",
+      "input_directory": "MyData",
       "filetype": "json",
       "filetype_configs": {},
       "dedup_key": [

@@ -1,0 +1,43 @@
+# Minimal requirements for personal-timeline (modernized)
+# Core data processing
+pandas>=2.0.0
+numpy>=1.24.0
+pytz>=2023.3
+
+# Progress bars and utilities
+tqdm>=4.65.0
+
+# Web framework (for frontend)
+flask>=3.0.0
+flask-cors>=4.0.0
+
+# Image processing
+Pillow>=10.0.0
+pillow-heif>=0.13.0
+
+# Geolocation
+geopy>=2.4.0
+
+# HTTP requests
+requests>=2.31.0
+
+# Date parsing
+parsedatetime>=2.6
+
+# Data visualization (optional but useful)
+matplotlib>=3.7.0
+plotly>=5.18.0
+
+# Database
+# pysqlite3 not needed - use built-in sqlite3
+
+# Optional: OpenAI and LangChain (for QA features)
+# openai>=1.0.0
+# langchain>=0.1.0
+# tiktoken>=0.5.0
+
+# Optional: ML/AI features (heavy dependencies)
+# torch>=2.0.0
+# transformers>=4.35.0
+# sentence-transformers>=2.2.0
+# faiss-cpu>=1.7.4

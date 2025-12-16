@@ -90,6 +90,8 @@ class PhotoImporter(GenericImporter):
                 path_arr = []
                 path_arr.append(pathname)
                 return path_arr
+        # Return empty list instead of None for non-existent paths or no matches
+        return []
 
     # Given a nested json(haystack), this function finds all occurrences
     # of the key(needle) and returns a list of found entries
@@ -97,10 +99,10 @@ class PhotoImporter(GenericImporter):
         if isinstance(haystack, dict) and needle in haystack.keys():
             if return_parent:
                 # print("FOUND:::", haystack)
-                return haystack
+                return [haystack]  # Wrap in list for consistent return type
             else:
                 # print("FOUND:::", haystack[needle])
-                return haystack[needle]
+                return [haystack[needle]]  # Wrap in list for consistent return type
         else:
             found_elements = []
             if isinstance(haystack, dict):

@@ -1,0 +1,50 @@
+╔══════════════════════════════════════════════════════════════════╗
+║              🚀 PERSONAL TIMELINE - QUICK START                  ║
+╚══════════════════════════════════════════════════════════════════╝
+
+📍 CURRENT LOCATION: /workspace/personal-timeline
+
+✅ YOUR DATA IS READY AT:
+   /workspace/MyData/facebook/posts/
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 OPTION 1: QUICK TEST (2 minutes)
+   Test with sample data first:
+
+   cd /workspace/personal-timeline
+   docker compose up -d frontend
+   
+   → Visit: http://localhost:52692
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 OPTION 2: FULL PIPELINE (10-20 minutes)
+   Process your real Facebook data:
+
+   cd /workspace/personal-timeline
+   docker compose up -d --build
+   docker compose logs -f backend
+   
+   → Visit: http://localhost:52692
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 CHECK STATUS:
+   docker ps
+   docker compose logs frontend
+   docker compose logs backend
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🛠️ TROUBLESHOOT:
+   docker compose down
+   docker compose up -d --build
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📖 FULL DOCS: See RUN_LOCALLY.md for detailed instructions
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎉 READY TO GO!
