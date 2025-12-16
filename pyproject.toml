@@ -1,0 +1,99 @@
+
+[project]
+name = "personal-timeline"
+version = "1.0.0"
+description = "Personal Timeline - Facebook data exporter and analyzer"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "Apache-2.0"}
+authors = [
+    {name = "Meta Platforms, Inc. and affiliates"},
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    # Core dependencies
+    "pandas>=2.2.0",
+    "numpy>=1.26.0",
+    "Flask>=3.1.0",
+    "Flask-CORS>=4.0.0",
+    "Pillow>=11.0.0",
+    "scikit-learn>=1.4.0",
+    "scipy>=1.12.0",
+    "matplotlib>=3.8.0",
+    "Jinja2>=3.1.0",
+    
+    # Database & ORM
+    "sqlalchemy>=2.0.0",
+    "sqlite-utils>=3.36.0",
+    
+    # Data processing
+    "geopy>=2.4.0",
+    "tqdm>=4.66.0",
+    "python-dateutil>=2.8.0",
+    "pytz>=2023.3",
+    
+    # File handling
+    "python-magic>=0.4.27",
+    "pyyaml>=6.0.0",
+    "requests>=2.31.0",
+    
+    # Image processing
+    "pillow-heif>=0.20.0",
+    "piexif>=1.1.3",
+    
+    # Geolocation
+    "timezonefinder>=6.5.0",
+    "parsedatetime>=2.6",
+    
+    # Optional AI/ML dependencies (commented out by default)
+    # Uncomment these if you need advanced features:
+    # "torch>=2.2.0",
+    # "torchvision>=0.17.0",
+    # "transformers>=4.40.0",
+    # "sentence-transformers>=2.6.0",
+    # "openai>=1.0.0",
+    # "langchain>=0.1.0",
+    # "langchain-community>=0.0.20",
+    # "tiktoken>=0.6.0",
+    # "faiss-cpu>=1.8.0",
+    # "spotipy>=2.23.0",
+]
+
+[project.optional-dependencies]
+ai = [
+    "torch>=2.2.0",
+    "torchvision>=0.17.0",
+    "transformers>=4.40.0",
+    "sentence-transformers>=2.6.0",
+    "openai>=1.0.0",
+    "langchain>=0.1.0",
+    "langchain-community>=0.0.20",
+    "tiktoken>=0.6.0",
+    "faiss-cpu>=1.8.0",
+    "spotipy>=2.23.0",
+]
+dev = [
+    "pytest>=7.4.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+    "mypy>=1.5.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.uv]
+# UV-specific configuration
+# python = "3.10"  # Commented out - UV will use system Python
