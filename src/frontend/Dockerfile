@@ -2,15 +2,32 @@ FROM node:18.16.0
 
 WORKDIR /app 
 
+# Copy package files first for better caching
+COPY src/frontend/package.json ./
 
+# Install dependencies with npm (more reliable than yarn without lock file)
+# Use --legacy-peer-deps to bypass React version conflicts
+RUN npm install --legacy-peer-deps
+
+# Fix ajv module resolution issues
+RUN npm install ajv@^8.12.0 ajv-keywords@^5.1.0 --legacy-peer-deps
+
+# Verify react-scripts is installed
+RUN ls -la node_modules/.bin/react-scripts || echo "react-scripts not found in .bin"
+RUN ls -la node_modules/react-scripts/ || echo "react-scripts package not found"
+
+# Copy the rest of the app
 COPY src/frontend .
-COPY sample_data public/digital_data
 
-# RUN ln -s /app/personal-data/app_data /app/public/digital_data/app_data
+# Create the digital_data directory structure
+RUN mkdir -p /app/public/digital_data/personal-data
 
-# To load the images the soft link should be to the entire personal-data folder
-RUN ln -s /app/personal-data /app/public/digital_data
-RUN yarn install
-RUN yarn add react react-scripts primereact primeicons video-react react-timelines @react-google-maps/api @uiw/react-heat-map react-syntax-highlighter @babel/runtime
+# Copy sample data for demo purposes (optional)
+COPY sample_data /app/public/digital_data/sample_data
 
-CMD ["yarn", "start"]
+# Create symlinks for actual data (will be available when volumes are mounted)
+# The MyData directory will be mounted from the host via docker-compose volumes
+RUN ln -sf /app/MyData /app/public/digital_data/MyData && \
+    ln -sf /app/MyData/app_data /app/public/digital_data/personal-data/app_data
+
+CMD ["npm", "start"]
