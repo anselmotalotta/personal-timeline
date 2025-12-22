@@ -58,7 +58,7 @@ class PersonalDataDBConnector:
             cls.instance = super(PersonalDataDBConnector, cls).__new__(cls)
             if not os.path.exists(os_path_to_data):
                 print("Path does not exist. Creating", os_path_to_data)
-                os.mkdir(os_path_to_data)
+                os.makedirs(os_path_to_data, exist_ok=True)
             cls.instance.con = sqlite3.connect(os.path.join(os_path_to_data, "raw_data.db"))
             cls.instance.cursor = cls.instance.con.cursor()
             cls.instance.setup_tables()

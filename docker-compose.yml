@@ -11,11 +11,13 @@ services:
     environment:
       - REACT_APP_BACKEND_URL=http://backend:8000
       - REACT_APP_QA_URL=http://qa:8085
+      - REACT_APP_AI_SERVICES_URL=http://ai-services:8086
       - BROWSER=none
       - WDS_SOCKET_PORT=52692
     depends_on:
       - backend
       - qa
+      - ai-services
 
   qa:
     build:
@@ -29,9 +31,34 @@ services:
     environment:
       - APP_DATA_DIR=/app/MyData/app_data
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
-    command: python -m src.qa.server
+      - AI_SERVICES_URL=http://ai-services:8086
+      - ENHANCED_QA_ENABLED=${ENHANCED_QA_ENABLED:-true}
+    command: python -m src.qa.enhanced_qa_server
     depends_on:
       - backend
+      - ai-services
+
+  ai-services:
+    build:
+      context: .
+      dockerfile: Dockerfile.ai-services
+    ports:
+      - "8086:8086"
+    volumes:
+      - ../MyData:/app/MyData
+      - ./src:/app/src
+      - ai-models:/app/models
+    environment:
+      - APP_DATA_DIR=/app/MyData/app_data
+      - AI_MODEL_DIR=/app/models
+      - LOCAL_LLM_MODEL=${LOCAL_LLM_MODEL:-microsoft/DialoGPT-medium}
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-sentence-transformers/all-MiniLM-L6-v2}
+      - TTS_MODEL=${TTS_MODEL:-espnet/kan-bayashi_ljspeech_vits}
+      - MULTIMODAL_MODEL=${MULTIMODAL_MODEL:-openai/clip-vit-base-patch32}
+      - AI_PROCESSING_BATCH_SIZE=${AI_PROCESSING_BATCH_SIZE:-32}
+      - AI_MAX_MEMORY_GB=${AI_MAX_MEMORY_GB:-4}
+      - ENABLE_GPU=${ENABLE_GPU:-false}
+    command: python -m src.common.services.ai_service_manager
 
   backend:
     build:
@@ -49,4 +76,12 @@ services:
       - incremental_image_enrich=False
       - incremental_export=True
       - enriched_data_to_json=True
+      - AI_SERVICES_URL=http://ai-services:8086
+      - ENABLE_AI_ENHANCEMENT=${ENABLE_AI_ENHANCEMENT:-true}
     command: bash src/ingest/ingestion_startup.sh
+    depends_on:
+      - ai-services
+
+volumes:
+  ai-models:
+    driver: local
