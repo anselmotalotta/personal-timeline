@@ -10,3 +10,4 @@ MyData/
 env/
 node_modules/
 *.log
+.hypothesis/
