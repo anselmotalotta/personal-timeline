@@ -35,6 +35,9 @@ import { Dropdown } from 'primereact/dropdown';
 import { Toolbar } from 'primereact/toolbar';
 import { Paginator } from 'primereact/paginator';
 
+import AIStatusBadge from './components/AIStatusBadge';
+import DisabledFeature from './components/DisabledFeature';
+import useAIStatus from './hooks/useAIStatus';
 
 import HeatMap from '@uiw/react-heat-map';
 import GoogleMapComponent from './map/GoogleMapComponent';
@@ -48,6 +51,9 @@ import importDigitalData from './service/DigitalDataImportor';
 import { config } from './Constants';
 
 function App() {
+
+  // AI Status Hook
+  const aiStatus = useAIStatus();
 
   // today's date
   const today = new Date();
@@ -681,6 +687,78 @@ function App() {
     };
   }
 
+  // AI Services data
+  const [stories, setStories] = useState([]);
+  const [people, setPeople] = useState([]);
+  const [galleries, setGalleries] = useState([]);
+  const [loadingAIData, setLoadingAIData] = useState(false);
+
+  // Load AI services data
+  const loadAIServicesData = async () => {
+    console.log('🔍 loadAIServicesData called, aiStatus.isAIAvailable:', aiStatus.isAIAvailable);
+    if (!aiStatus.isAIAvailable) {
+      console.log('❌ AI not available, skipping data load');
+      return;
+    }
+    
+    console.log('✅ AI available, loading data...');
+    setLoadingAIData(true);
+    try {
+      // Load stories
+      console.log('📚 Loading stories...');
+      const storiesResponse = await fetch(`${config.API_URL}/stories`);
+      if (storiesResponse.ok) {
+        const storiesData = await storiesResponse.json();
+        setStories(storiesData.stories || []);
+        console.log(`✅ Loaded ${storiesData.stories?.length || 0} stories`);
+      } else {
+        console.log('❌ Failed to load stories:', storiesResponse.status);
+      }
+
+      // Load people
+      console.log('👥 Loading people...');
+      const peopleResponse = await fetch(`${config.API_URL}/people`);
+      if (peopleResponse.ok) {
+        const peopleData = await peopleResponse.json();
+        setPeople(peopleData.people || []);
+        console.log(`✅ Loaded ${peopleData.people?.length || 0} people`);
+      } else {
+        console.log('❌ Failed to load people:', peopleResponse.status);
+      }
+
+      // Load galleries
+      console.log('🖼️ Loading galleries...');
+      const galleriesResponse = await fetch(`${config.API_URL}/galleries`);
+      if (galleriesResponse.ok) {
+        const galleriesData = await galleriesResponse.json();
+        setGalleries(galleriesData.galleries || []);
+        console.log(`✅ Loaded ${galleriesData.galleries?.length || 0} galleries`);
+      } else {
+        console.log('❌ Failed to load galleries:', galleriesResponse.status);
+      }
+    } catch (error) {
+      console.error('❌ Failed to load AI services data:', error);
+    } finally {
+      setLoadingAIData(false);
+    }
+  };
+
+  // Load AI data when AI status changes
+  useEffect(() => {
+    console.log('🔄 AI status changed:', aiStatus);
+    console.log('🔍 isAIAvailable:', aiStatus.isAIAvailable);
+    console.log('🔍 hasStoryGeneration:', aiStatus.hasStoryGeneration);
+    console.log('🔍 hasPeopleIntelligence:', aiStatus.hasPeopleIntelligence);
+    console.log('🔍 hasSmartGalleries:', aiStatus.hasSmartGalleries);
+    
+    if (aiStatus.isAIAvailable) {
+      console.log('✅ AI is available, loading data...');
+      loadAIServicesData();
+    } else {
+      console.log('❌ AI not available, status:', aiStatus.ai_status);
+    }
+  }, [aiStatus.isAIAvailable]);
+
   useEffect(() => { importDigitalData(tracks, setTracks, setSelectedDateRange, toast); }, []);
   
   return (
@@ -690,38 +768,56 @@ function App() {
 
       <h1 className="my-0 title">Personal Timeline</h1>
       <h3 className="font-light">Research by Meta AI</h3>
+      <div style={{background: 'red', color: 'white', padding: '10px', margin: '10px'}}>
+        🔧 DEBUG: AI Status = {aiStatus.ai_status} | Available = {aiStatus.isAIAvailable ? 'YES' : 'NO'}
+      </div>
       <Divider className='my-3'/>
 
       <h2 className="">Query your personal timeline</h2>
       {/* QA dialog box */}
       <div class="grid">
       <div class="col-fixed mr-6" style={{width: '800px'}}>
-      <p>Enter a question or "<strong>clear</strong>" to clear all commands.</p>
-      <div className="flex flex-wrap gap-3 my-3">
-        {qa_methods.map((method) => {
-          return <div className="flex align-items-center">
-            <RadioButton value={method} onChange={(e) => { setQA(e.value) }} checked={qa === method} />
-            <label className="ml-2">{method}</label>
-          </div>;
-        })}
-        {/* <div className="flex align-items-center">
-                    <RadioButton value="View-based" onChange={(e) => setQA(e.value)} checked={qa === 'View-based'} />
-                    <label className="ml-2">View-based</label>
-                </div> */}
-      </div>
-      <span className='my-2'> {sampleQuestions.map((q) => {return <Button className='mx-2 my-1 p-chip p-chip-text overflow-x-auto' label={q} onClick={() =>
-        {
-          if (qa === null) {
-            setQA('Retrieval-based');
-          }
-          // navigator.clipboard.writeText(q);
-          copyToClipboard(q);
-          toast.current.show({ severity: 'success', summary: 'Success', detail: 'Copied to clipboard!' });
-        }}/> }) } </span>
-      <div class="terminal-demo">
-      <Terminal className="text-lg line-height-3" style={{ maxWidth: '800px', height: '500px' }} welcomeMessage="Welcome to TL-QA" prompt="TL-QA $" />
-      </div>
-      <ProgressBar mode="indeterminate" style={{ maxWidth: '800px', height: '6px', display: running ? '' : 'none' }}></ProgressBar>
+      
+      {!aiStatus.hasSemanticSearch ? (
+        <DisabledFeature
+          featureName="AI-Powered Search"
+          description="Ask natural language questions about your personal timeline and get intelligent, contextual answers."
+          requiredProvider="OpenAI, Anthropic, or Google AI"
+          icon="🔍"
+          aiStatus={aiStatus}
+        >
+          <div style={{ height: '400px', background: '#f8f9fa', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ textAlign: 'center', color: '#6c757d' }}>
+              <i className="pi pi-search" style={{ fontSize: '48px', marginBottom: '16px' }}></i>
+              <p>AI Search Interface</p>
+            </div>
+          </div>
+        </DisabledFeature>
+      ) : (
+        <>
+          <p>Enter a question or "<strong>clear</strong>" to clear all commands.</p>
+          <div className="flex flex-wrap gap-3 my-3">
+            {qa_methods.map((method) => {
+              return <div className="flex align-items-center">
+                <RadioButton value={method} onChange={(e) => { setQA(e.value) }} checked={qa === method} />
+                <label className="ml-2">{method}</label>
+              </div>;
+            })}
+          </div>
+          <span className='my-2'> {sampleQuestions.map((q) => {return <Button className='mx-2 my-1 p-chip p-chip-text overflow-x-auto' label={q} onClick={() =>
+            {
+              if (qa === null) {
+                setQA('Retrieval-based');
+              }
+              copyToClipboard(q);
+              toast.current.show({ severity: 'success', summary: 'Success', detail: 'Copied to clipboard!' });
+            }}/> }) } </span>
+          <div class="terminal-demo">
+          <Terminal className="text-lg line-height-3" style={{ maxWidth: '800px', height: '500px' }} welcomeMessage="Welcome to TL-QA" prompt="TL-QA $" />
+          </div>
+          <ProgressBar mode="indeterminate" style={{ maxWidth: '800px', height: '6px', display: running ? '' : 'none' }}></ProgressBar>
+        </>
+      )}
       </div>
 
       {/* Container for all the detailed views */}
@@ -762,7 +858,84 @@ function App() {
       </div>
 
       <Divider className='my-5'/>
-      <h2 className="my-5">Your personal timeline</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <h2 className="my-5">Your personal timeline</h2>
+        
+        {/* AI Feature Buttons */}
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+          {aiStatus.hasStoryGeneration ? (
+            <Button 
+              label="Generate Story" 
+              icon="pi pi-book"
+              className="p-button-outlined"
+              onClick={() => {
+                toast.current.show({ 
+                  severity: 'info', 
+                  summary: 'Story Generation', 
+                  detail: 'AI story generation feature coming soon!' 
+                });
+              }}
+            />
+          ) : (
+            <Button 
+              label="Generate Story" 
+              icon="pi pi-book"
+              className="p-button-outlined"
+              disabled
+              tooltip="Add OpenAI or Anthropic API key to enable story generation"
+              tooltipOptions={{ position: 'bottom' }}
+            />
+          )}
+          
+          {aiStatus.hasPeopleIntelligence ? (
+            <Button 
+              label="People Intelligence" 
+              icon="pi pi-users"
+              className="p-button-outlined"
+              onClick={() => {
+                toast.current.show({ 
+                  severity: 'info', 
+                  summary: 'People Intelligence', 
+                  detail: 'People detection and analysis feature coming soon!' 
+                });
+              }}
+            />
+          ) : (
+            <Button 
+              label="People Intelligence" 
+              icon="pi pi-users"
+              className="p-button-outlined"
+              disabled
+              tooltip="Add OpenAI or Google AI key to enable people intelligence"
+              tooltipOptions={{ position: 'bottom' }}
+            />
+          )}
+          
+          {aiStatus.hasSmartGalleries ? (
+            <Button 
+              label="Smart Galleries" 
+              icon="pi pi-images"
+              className="p-button-outlined"
+              onClick={() => {
+                toast.current.show({ 
+                  severity: 'info', 
+                  summary: 'Smart Galleries', 
+                  detail: 'AI-curated photo galleries feature coming soon!' 
+                });
+              }}
+            />
+          ) : (
+            <Button 
+              label="Smart Galleries" 
+              icon="pi pi-images"
+              className="p-button-outlined"
+              disabled
+              tooltip="Add any AI provider key to enable smart galleries"
+              tooltipOptions={{ position: 'bottom' }}
+            />
+          )}
+        </div>
+      </div>
 
       <div class="grid">
       <div class="col-fixed mr-6" style={{width: '800px'}}>
@@ -789,6 +962,39 @@ function App() {
       </div>
 
       <div class="col-fixed" style={{width: '800px'}}>
+        {/* AI Features Status */}
+        {!aiStatus.isAIAvailable && (
+          <Card title="🤖 AI Features" className='mb-3 shadow-3' style={{ border: '2px solid #ef4444' }}>
+            <div style={{ textAlign: 'center', padding: '20px' }}>
+              <div style={{ fontSize: '48px', marginBottom: '16px', opacity: 0.5 }}>🔒</div>
+              <h4 style={{ color: '#dc2626', marginBottom: '12px' }}>AI Features Disabled</h4>
+              <p style={{ color: '#6b7280', marginBottom: '16px' }}>
+                Add API keys to unlock AI-powered story generation, people intelligence, and smart galleries.
+              </p>
+              <Button 
+                label="Setup API Keys" 
+                icon="pi pi-key"
+                className="p-button-primary"
+                onClick={() => window.open('/DEPLOYMENT_GUIDE.md', '_blank')}
+              />
+            </div>
+          </Card>
+        )}
+
+        {/* Simple AI Test Section */}
+        {aiStatus.isAIAvailable && (
+          <Card title="🤖 AI Services Active" className='mb-3 shadow-3' style={{ border: '2px solid #22c55e' }}>
+            <div style={{ padding: '20px' }}>
+              <h4 style={{ color: '#16a34a', marginBottom: '12px' }}>AI Features Available!</h4>
+              <p>Status: {aiStatus.ai_status}</p>
+              <p>Stories loaded: {stories.length}</p>
+              <p>People detected: {people.length}</p>
+              <p>Galleries: {galleries.length}</p>
+              {loadingAIData && <ProgressBar mode="indeterminate" />}
+            </div>
+          </Card>
+        )}
+        
         {/* Summaries */}
         {generate_summaries(tracks)}
         
@@ -823,6 +1029,9 @@ function App() {
       </div>
 
       </div>
+      
+      {/* AI Status Badge */}
+      <AIStatusBadge aiStatus={aiStatus} />
     </div>
   );
 }

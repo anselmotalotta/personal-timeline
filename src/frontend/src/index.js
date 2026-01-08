@@ -22,13 +22,18 @@ import 'primereact/resources/themes/lara-light-indigo/theme.css';   // theme
 import 'primereact/resources/primereact.css';                       // core css
 import 'primeicons/primeicons.css';                                 // icons
 import 'primeflex/primeflex.css';                                   // css utility
-import App from './App';
+import EnhancedApp from './EnhancedApp';
+import ErrorBoundary from './components/ErrorBoundary';
 import reportWebVitals from './reportWebVitals';
+
+console.log('🚀 Starting AI-Augmented Personal Archive...');
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <ErrorBoundary>
+      <EnhancedApp />
+    </ErrorBoundary>
   </React.StrictMode>
 );
 
