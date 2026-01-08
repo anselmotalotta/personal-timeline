@@ -32,22 +32,31 @@ This enhanced version transforms the original Personal Timeline into an intellig
 
 **Prerequisites:**
 - Docker Desktop installed and running
-- Personal data in `../MyData/` directory (optional - sample data will be created)
+- **API Keys** (optional but recommended for AI features)
 
-**Start the application:**
+**⚡ 5-Minute Setup:**
 ```bash
-# Quick start script
-./start_app.sh
+# 1. Setup API keys for AI features (optional)
+cp .env.example .env
+# Edit .env and add at least one API key:
+# OPENAI_API_KEY=sk-your-key-here
 
-# Or manually:
-docker-compose up -d --build
+# 2. Start the application
+./start_app.sh
 ```
 
-**Access the enhanced application:**
-- **🎨 Main App**: http://localhost:52692 - Enhanced timeline with AI features
-- **🤖 AI Chat**: http://localhost:57485 - Conversational memory exploration  
+**�  Access Your Archive:**
+- **🎨 Main App**: http://localhost:52692 - Your personal timeline with AI features
+- **� AI  Chat**: http://localhost:57485 - Conversational memory exploration  
+- **📊 System Health**: http://localhost:8086/health - API status and system health
 - **⚙️ Backend API**: http://localhost:8000 - REST endpoints
-- **🧠 AI Services**: http://localhost:8086 - Local AI model endpoints
+
+**🔑 API Token Setup:**
+- **With API Keys**: Full AI features (story generation, people intelligence, smart galleries)
+- **Without API Keys**: Basic timeline features only (data import, visualization, search)
+- **Status Indicator**: The app shows clear badges indicating AI feature availability
+
+> 📖 **Detailed Setup**: See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) for complete API token configuration, cost management, and troubleshooting.
 
 ### Option 2: Try AI Features (No Docker Required)
 
@@ -55,7 +64,7 @@ Experience the AI capabilities with demo scripts:
 
 ```bash
 # Run all demos
-./test_services.sh
+config/test_services.sh
 
 # Or individual demos:
 python examples/gallery_curation_demo.py      # Smart gallery creation
@@ -63,6 +72,8 @@ python examples/memory_resurfacing_demo.py    # Contextual memory suggestions
 python examples/self_reflection_demo.py       # Personal growth insights
 python examples/privacy_safety_demo.py        # Privacy controls demo
 ```
+
+> 📖 **Complete Setup Guide**: See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) for detailed API token configuration, cost management, troubleshooting, and production deployment.
 
 ## 🎮 Key Features to Explore
 
@@ -154,34 +165,127 @@ ENABLE_AI_ENHANCEMENT=true
 ENHANCED_QA_ENABLED=true
 ```
 
-## 🛠️ Development & Testing
+## �  Project Structure
 
-### Running Tests
+```
+personal-timeline/
+├── 📄 README.md                    # This file
+├── 📄 .env.example                 # Environment configuration template
+├── 📄 start_app.sh                 # Quick start script
+├── 📄 docker-compose.yml           # Docker services configuration
+├── 📄 pyproject.toml               # Python project configuration
+├── 📄 uv.lock                      # UV package lock file
+├── 
+├── 📂 src/                         # Source code
+│   ├── 📂 ai_services/             # AI service implementations
+│   ├── 📂 data_processing/         # Data processing pipeline
+│   └── 📂 frontend/                # React frontend application
+├── 
+├── 📂 tests/                       # Test suite
+│   ├── 📂 unit/                    # Unit tests
+│   ├── 📂 integration/             # Integration tests
+│   ├── 📂 component/               # Component tests
+│   ├── 📂 e2e/                     # End-to-end tests
+│   └── 📄 run_all_tests.py         # Test runner
+├── 
+├── 📂 config/                      # Configuration files
+│   ├── 📄 ingest.conf              # Data ingestion configuration
+│   ├── 📄 setup_dev_uv.sh          # Development setup script
+│   └── 📂 archive/                 # Archived configurations
+├── 
+├── 📂 docs/                        # Documentation
+│   ├── 📄 DEPLOYMENT_GUIDE.md      # Deployment instructions
+│   ├── 📄 CONTRIBUTING.md          # Contribution guidelines
+│   └── 📄 QUICK_START_GUIDE.md     # Quick start guide
+├── 
+├── 📂 tools/                       # Development tools & utilities
+│   ├── 📄 debug_*.py               # Debug scripts
+│   ├── 📄 *test*.html              # HTML test interfaces
+│   └── 📄 create_sample_data.py    # Sample data generator
+├── 
+├── 📂 reports/                     # Test reports & analysis
+│   ├── 📄 FINAL_TEST_REPORT.md     # Latest test results
+│   └── 📄 *_results.json          # Test execution results
+├── 
+└── 📂 MyData/                      # Your personal data (created on first run)
+    ├── 📂 facebook/                # Facebook export data
+    ├── 📂 google_photos/           # Google Photos data
+    └── 📂 processed_data.db        # Processed database
+```
+
+## 🧪 Testing
+
+### Quick Test Suite
 ```bash
-# All tests
-python -m pytest tests/ -v
+# Run all tests with the comprehensive test runner
+python tests/run_all_tests.py
 
-# Specific AI features
-python -m pytest tests/test_story_generation.py -v
+# Run specific test categories
+python tests/run_all_tests.py --category unit
+python tests/run_all_tests.py --category integration
+python tests/run_all_tests.py --category e2e
+```
+
+### Individual Test Files
+```bash
+# AI Service Tests
+python -m pytest tests/unit/test_story_generation.py -v
+python -m pytest tests/unit/test_ai_providers.py -v
 python -m pytest tests/test_people_intelligence.py -v
-python -m pytest tests/test_gallery_curation.py -v
-python -m pytest tests/test_privacy_safety.py -v
+python -m pytest tests/test_data_processing.py -v
 
-# Frontend tests
+# Integration Tests
+python -m pytest tests/integration/test_api_endpoints.py -v
+
+# Component Tests
+python -m pytest tests/component/test_frontend_components.py -v
+
+# End-to-End Tests
+python -m pytest tests/e2e/test_user_workflows.py -v
+```
+
+### Frontend Tests
+```bash
+# React component tests
 cd src/frontend && npm test -- --watchAll=false
+
+# Frontend integration tests
+cd src/frontend && npm run test:integration
+```
+
+### Manual Testing Tools
+```bash
+# HTML-based testing interfaces (open in browser)
+open tools/browser_functionality_test.html
+open tools/test_frontend_functionality.html
+open tools/simple_frontend_test.html
+
+# Debug tools
+python tools/debug_openai_error.py
+python tools/trigger_people_detection.py
+python tools/create_sample_data.py
 ```
 
 ### Development Scripts
 ```bash
 # Restart all services
-./scripts/RESTART_DOCKER.sh
+config/RESTART_DOCKER.sh
 
-# Verify setup
-./scripts/verify_enhanced_docker_setup.sh
+# Verify Docker setup
+config/verify_enhanced_docker_setup.sh
 
-# Stop services
-docker-compose down
+# Development environment setup
+config/setup_dev_uv.sh
+
+# Stop all services
+docker compose down
 ```
+
+### Test Reports
+After running tests, check the `reports/` folder for:
+- `FINAL_TEST_REPORT.md` - Latest comprehensive test results
+- `*_test_results.json` - Detailed test execution data
+- `system_analysis_results.json` - System health analysis
 
 ## 📚 Documentation
 
@@ -540,7 +644,7 @@ Ready to transform your personal data into meaningful stories and insights?
 ./start_app.sh
 
 # Or try demos without Docker
-./test_services.sh
+config/test_services.sh
 ```
 
 Visit http://localhost:52692 to explore your AI-augmented personal archive!
