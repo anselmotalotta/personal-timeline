@@ -51,7 +51,7 @@ class TestDockerIntegration:
             
             # Start Docker services
             result = subprocess.run(
-                ["docker-compose", "up", "-d", "--build"],
+                ["docker", "compose", "up", "-d", "--build"],
                 capture_output=True,
                 text=True,
                 timeout=300
@@ -77,7 +77,7 @@ class TestDockerIntegration:
         finally:
             # Cleanup
             os.chdir(original_dir)
-            subprocess.run(["docker-compose", "-f", f"{test_dir}/docker-compose.yml", "down", "-v"], 
+            subprocess.run(["docker", "compose", "-f", f"{test_dir}/docker-compose.yml", "down", "-v"], 
                          capture_output=True, cwd=test_dir)
             shutil.rmtree(test_dir, ignore_errors=True)
     
@@ -172,7 +172,7 @@ class TestDockerIntegration:
         
         # Restart backend service
         result = subprocess.run(
-            ["docker-compose", "restart", "backend"],
+            ["docker", "compose", "restart", "backend"],
             capture_output=True,
             text=True,
             cwd=test_dir,
@@ -277,7 +277,7 @@ class TestDockerIntegration:
         
         # Restart AI services container
         restart_result = subprocess.run(
-            ["docker-compose", "restart", "ai-services"],
+            ["docker", "compose", "restart", "ai-services"],
             capture_output=True,
             cwd=test_dir,
             timeout=60
@@ -325,7 +325,7 @@ class TestDockerIntegration:
         
         # Stop AI services
         result = subprocess.run(
-            ["docker-compose", "stop", "ai-services"],
+            ["docker", "compose", "stop", "ai-services"],
             capture_output=True,
             cwd=test_dir,
             timeout=30
@@ -342,7 +342,7 @@ class TestDockerIntegration:
         
         # Restart AI services
         result = subprocess.run(
-            ["docker-compose", "start", "ai-services"],
+            ["docker", "compose", "start", "ai-services"],
             capture_output=True,
             cwd=test_dir,
             timeout=60
