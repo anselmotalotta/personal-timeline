@@ -1,7 +1,7 @@
-# AI Services Dockerfile for Personal Archive System
+# AI Services Dockerfile for Personal Archive System - Simplified
 FROM python:3.10-slim
 
-# Install system dependencies for AI/ML libraries
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     curl \
     gcc \
@@ -14,16 +14,51 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Copy requirements first (for better caching)
-COPY src/requirements.txt .
+# Copy project files
+COPY pyproject.toml ./
+COPY README.md ./
 
-# Install Python dependencies with AI/ML libraries
-RUN pip install --no-cache-dir -r requirements.txt
+# Install ALL required dependencies at once
+RUN pip install --no-cache-dir \
+    # Core FastAPI and web framework
+    fastapi>=0.104.0 \
+    uvicorn[standard]>=0.24.0 \
+    pydantic>=2.5.0 \
+    pydantic-settings>=2.1.0 \
+    # Environment and config
+    python-dotenv>=1.0.0 \
+    # HTTP clients and async
+    aiohttp>=3.9.0 \
+    httpx>=0.25.0 \
+    tenacity>=8.2.0 \
+    asyncio-throttle>=1.0.0 \
+    # Data processing
+    numpy>=1.26.0 \
+    pandas>=2.2.0 \
+    # Image processing
+    pillow>=11.0.0 \
+    piexif>=1.1.3 \
+    # Database
+    sqlite-utils>=3.36.0 \
+    sqlalchemy>=2.0.0 \
+    # Utilities
+    requests>=2.31.0 \
+    python-dateutil>=2.8.0 \
+    pytz>=2023.3 \
+    pyyaml>=6.0.0 \
+    # File handling
+    python-magic>=0.4.27 \
+    # Geolocation
+    geopy>=2.4.0 \
+    timezonefinder>=6.5.0 \
+    parsedatetime>=2.6 \
+    # Progress and utilities
+    tqdm>=4.66.0
 
 # Copy application code
 COPY . .
 
-# Create directories for AI models and data
+# Create directories
 RUN mkdir -p /app/models /app/MyData/app_data || true
 
 # Set environment variables
@@ -33,7 +68,7 @@ ENV PYTHONPATH=/app
 ENV TRANSFORMERS_CACHE=/app/models/transformers
 ENV HF_HOME=/app/models/huggingface
 
-# Expose port for AI services
+# Expose port
 EXPOSE 8086
 
 # Health check
@@ -41,4 +76,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:8086/health || exit 1
 
 # Default command
-CMD ["python", "-m", "src.common.services.ai_service_manager"]
+CMD ["python", "-m", "src.ai_services.api"]

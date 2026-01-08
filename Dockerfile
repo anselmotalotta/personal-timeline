@@ -16,18 +16,13 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 ENV PATH="/root/.local/bin:$PATH"
 WORKDIR /app
 
-# Copy project files
-COPY pyproject.toml .
+# Copy project files for UV
+COPY pyproject.toml uv.lock ./
 COPY README.md .
-COPY src/requirements.txt src/
 
-# Create virtual environment and install dependencies
-RUN uv venv /app/.venv
-ENV PATH="/app/.venv/bin:$PATH"
-
-# Install dependencies with pip (in the virtual environment)
-# The virtual environment is already activated via PATH
-RUN pip install --no-cache-dir -r src/requirements.txt
+# Install dependencies with UV (with pip fallback)
+RUN uv sync --frozen || (echo "UV failed, falling back to pip" && \
+    uv pip install --system -r src/requirements.txt)
 
 # Runtime stage
 FROM python:3.10-slim
@@ -39,9 +34,9 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Copy virtual environment from builder
-COPY --from=builder /app/.venv /app/.venv
-ENV PATH="/app/.venv/bin:$PATH"
+# Copy installed packages from builder
+COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
 
 # Copy application code
 COPY . .

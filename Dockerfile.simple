@@ -1,6 +1,6 @@
 
 
-# Simple single-stage Dockerfile (no virtual env issues)
+# Simple single-stage Dockerfile with UV (no virtual env issues)
 FROM python:3.10-slim
 
 # Install system dependencies
@@ -11,13 +11,19 @@ RUN apt-get update && apt-get install -y \
     libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
+# Install UV
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.local/bin:$PATH"
+
 WORKDIR /app
 
-# Copy requirements first (for better caching)
-COPY src/requirements.txt .
+# Copy project files for UV
+COPY pyproject.toml uv.lock ./
+COPY README.md .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install dependencies with UV (with pip fallback)
+RUN uv sync --frozen || (echo "UV failed, falling back to pip" && \
+    pip install --no-cache-dir -e .)
 
 # Copy application code
 COPY . .
