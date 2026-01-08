@@ -964,4 +964,4 @@ def get_status():
 
 
 if __name__ == '__main__':
-    app.run(host="::", port=8086, debug=True)
+    app.run(host="::", port=8085, debug=True)
