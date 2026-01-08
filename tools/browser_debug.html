@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Browser Debug Test</title>
+</head>
+<body>
+    <h1>Browser Debug Test</h1>
+    <div id="results"></div>
+    <script>
+        console.log('🚀 Debug test starting...');
+        
+        // Test 1: Check what API_URL would be
+        const API_URL = 'http://localhost:8086';
+        console.log('🔧 API_URL:', API_URL);
+        
+        // Test 2: Try to fetch people data
+        fetch(API_URL + '/people')
+            .then(response => {
+                console.log('✅ People API response status:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('✅ People data:', data);
+                document.getElementById('results').innerHTML = 
+                    '<p>✅ People API works: ' + data.count + ' people found</p>';
+            })
+            .catch(error => {
+                console.error('❌ People API error:', error);
+                document.getElementById('results').innerHTML = 
+                    '<p>❌ People API failed: ' + error.message + '</p>';
+            });
+        
+        // Test 3: Try to fetch status
+        fetch(API_URL + '/status')
+            .then(response => response.json())
+            .then(data => {
+                console.log('✅ Status data:', data);
+            })
+            .catch(error => {
+                console.error('❌ Status API error:', error);
+            });
+    </script>
+</body>
+</html>
+    

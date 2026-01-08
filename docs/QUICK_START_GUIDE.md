@@ -13,7 +13,7 @@
 ./scripts/RESTART_DOCKER.sh
 
 # Option B: Manual start
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
 ### 2. Access the Application
@@ -42,13 +42,13 @@ Once services are running, open these URLs:
 ### 3. Check System Status
 ```bash
 # View all services
-docker-compose ps
+docker compose ps
 
 # Check logs
-docker-compose logs -f
+docker compose logs -f
 
 # Check specific service
-docker-compose logs frontend
+docker compose logs frontend
 ```
 
 ## 🎮 Testing the Features
@@ -106,7 +106,7 @@ lsof -i :8086
 ### AI Services Not Working
 ```bash
 # Check AI service logs
-docker-compose logs ai-services
+docker compose logs ai-services
 
 # Verify AI service health
 curl http://localhost:8086/health
@@ -115,7 +115,7 @@ curl http://localhost:8086/health
 ### Frontend Not Loading
 ```bash
 # Check frontend logs
-docker-compose logs frontend
+docker compose logs frontend
 
 # Verify frontend is running
 curl http://localhost:52692
@@ -126,7 +126,7 @@ The system will work with sample data if no personal data is found. To add your 
 
 1. Place exported data in `../MyData/` directory
 2. Restart services: `./scripts/RESTART_DOCKER.sh`
-3. Check ingestion logs: `docker-compose logs backend`
+3. Check ingestion logs: `docker compose logs backend`
 
 ## 🎯 Key Features to Test
 
@@ -153,10 +153,10 @@ The system will work with sample data if no personal data is found. To add your 
 
 ```bash
 # Stop all services
-docker-compose down
+docker compose down
 
 # Stop and remove volumes (careful - removes data!)
-docker-compose down -v
+docker compose down -v
 ```
 
 ## 📊 System Status
@@ -179,4 +179,4 @@ You'll know it's working when:
 
 ---
 
-**Need help?** Check the logs with `docker-compose logs -f` or refer to the SYSTEM_INTEGRATION_REPORT.md for detailed test results.
+**Need help?** Check the logs with `docker compose logs -f` or refer to the SYSTEM_INTEGRATION_REPORT.md for detailed test results.

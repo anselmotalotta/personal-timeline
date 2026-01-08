@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Personal Archive - Minimal Test Frontend</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .card { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .status-badge { padding: 8px 16px; border-radius: 20px; font-weight: bold; display: inline-block; margin: 10px 0; }
+        .status-green { background: #d4edda; color: #155724; }
+        .status-yellow { background: #fff3cd; color: #856404; }
+        .status-red { background: #f8d7da; color: #721c24; }
+        .status-gray { background: #e2e3e5; color: #383d41; }
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0; }
+        .feature-card { padding: 15px; border: 2px solid #ddd; border-radius: 8px; text-align: center; }
+        .feature-enabled { border-color: #28a745; background: #f8fff9; }
+        .feature-disabled { border-color: #dc3545; background: #fff8f8; }
+        button { padding: 10px 20px; margin: 5px; border: none; border-radius: 5px; cursor: pointer; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        pre { background: #f8f9fa; padding: 15px; border-radius: 5px; overflow-x: auto; font-size: 12px; }
+        .loading { opacity: 0.6; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 AI Personal Archive - Test Interface</h1>
+        
+        <div class="card">
+            <h2>🔌 Connection Status</h2>
+            <div id="connection-status">
+                <div class="status-badge status-gray" id="status-badge">⏳ Checking...</div>
+                <p id="status-message">Connecting to AI services...</p>
+            </div>
+            
+            <button class="btn-primary" onclick="checkStatus()">🔄 Refresh Status</button>
+            <button class="btn-secondary" onclick="toggleDetails()">📊 Toggle Details</button>
+            
+            <div id="status-details" style="display: none;">
+                <h4>Raw API Response:</h4>
+                <pre id="raw-response">Loading...</pre>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>🎯 AI Features</h2>
+            <div class="feature-grid" id="features-grid">
+                <div class="feature-card feature-disabled">
+                    <h4>📖 Story Generation</h4>
+                    <p>Status: <span id="story-status">Unknown</span></p>
+                </div>
+                <div class="feature-card feature-disabled">
+                    <h4>👥 People Intelligence</h4>
+                    <p>Status: <span id="people-status">Unknown</span></p>
+                </div>
+                <div class="feature-card feature-disabled">
+                    <h4>🎨 Smart Galleries</h4>
+                    <p>Status: <span id="gallery-status">Unknown</span></p>
+                </div>
+                <div class="feature-card feature-disabled">
+                    <h4>🔍 Semantic Search</h4>
+                    <p>Status: <span id="search-status">Unknown</span></p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>🧪 Quick Tests</h2>
+            <button class="btn-success" onclick="testStoryGeneration()">📖 Test Story Generation</button>
+            <button class="btn-success" onclick="testPeopleIntelligence()">👥 Test People Detection</button>
+            <button class="btn-success" onclick="testSmartGalleries()">🎨 Test Gallery Creation</button>
+            <button class="btn-success" onclick="testSemanticSearch()">🔍 Test Semantic Search</button>
+            
+            <div id="test-results" style="margin-top: 20px;"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentStatus = null;
+        
+        // Try both development and Docker ports
+        const AI_URLS = [
+            'http://localhost:8087',  // Development server
+            'http://localhost:8086'   // Docker container
+        ];
+        
+        async function findWorkingAIService() {
+            for (const url of AI_URLS) {
+                try {
+                    const response = await fetch(`${url}/status`, { timeout: 3000 });
+                    if (response.ok) {
+                        console.log(`✅ Found working AI service at ${url}`);
+                        return url;
+                    }
+                } catch (error) {
+                    console.log(`❌ ${url} not reachable: ${error.message}`);
+                }
+            }
+            throw new Error('No AI services reachable');
+        }
+        
+        async function checkStatus() {
+            const statusBadge = document.getElementById('status-badge');
+            const statusMessage = document.getElementById('status-message');
+            const rawResponse = document.getElementById('raw-response');
+            
+            statusBadge.textContent = '⏳ Checking...';
+            statusBadge.className = 'status-badge status-gray';
+            statusMessage.textContent = 'Connecting to AI services...';
+            
+            try {
+                const aiUrl = await findWorkingAIService();
+                const response = await fetch(`${aiUrl}/status`);
+                const data = await response.json();
+                
+                currentStatus = data;
+                
+                // Update status badge
+                const statusMap = {
+                    'full': { class: 'status-green', icon: '🟢' },
+                    'partial': { class: 'status-yellow', icon: '🟡' },
+                    'unavailable': { class: 'status-red', icon: '🔴' },
+                    'error': { class: 'status-red', icon: '⚠️' }
+                };
+                
+                const status = statusMap[data.ai_status] || { class: 'status-gray', icon: '❓' };
+                statusBadge.textContent = `${status.icon} ${data.ai_status.toUpperCase()}`;
+                statusBadge.className = `status-badge ${status.class}`;
+                statusMessage.textContent = data.ai_message;
+                
+                // Update features
+                updateFeatures(data.features);
+                
+                // Update raw response
+                rawResponse.textContent = JSON.stringify(data, null, 2);
+                
+            } catch (error) {
+                statusBadge.textContent = '❌ ERROR';
+                statusBadge.className = 'status-badge status-red';
+                statusMessage.textContent = `Connection failed: ${error.message}`;
+                rawResponse.textContent = `Error: ${error.message}`;
+            }
+        }
+        
+        function updateFeatures(features) {
+            const featureMap = {
+                'story-status': features.story_generation,
+                'people-status': features.people_intelligence,
+                'gallery-status': features.smart_galleries,
+                'search-status': features.semantic_search
+            };
+            
+            Object.entries(featureMap).forEach(([id, enabled]) => {
+                const element = document.getElementById(id);
+                const card = element.closest('.feature-card');
+                
+                if (enabled) {
+                    element.textContent = '✅ Enabled';
+                    card.className = 'feature-card feature-enabled';
+                } else {
+                    element.textContent = '❌ Disabled';
+                    card.className = 'feature-card feature-disabled';
+                }
+            });
+        }
+        
+        function toggleDetails() {
+            const details = document.getElementById('status-details');
+            details.style.display = details.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        async function testFeature(featureName, endpoint) {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = `<p>🧪 Testing ${featureName}...</p>`;
+            
+            try {
+                const aiUrl = await findWorkingAIService();
+                const response = await fetch(`${aiUrl}${endpoint}`);
+                const data = await response.json();
+                
+                resultsDiv.innerHTML = `
+                    <h4>✅ ${featureName} Test Results:</h4>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <h4>❌ ${featureName} Test Failed:</h4>
+                    <p style="color: red;">${error.message}</p>
+                `;
+            }
+        }
+        
+        function testStoryGeneration() {
+            testFeature('Story Generation', '/health');
+        }
+        
+        function testPeopleIntelligence() {
+            testFeature('People Intelligence', '/providers');
+        }
+        
+        function testSmartGalleries() {
+            testFeature('Smart Galleries', '/usage/summary');
+        }
+        
+        function testSemanticSearch() {
+            testFeature('Semantic Search', '/metrics');
+        }
+        
+        // Auto-check status when page loads
+        window.onload = checkStatus;
+        
+        // Auto-refresh every 30 seconds
+        setInterval(checkStatus, 30000);
+    </script>
+</body>
+</html>

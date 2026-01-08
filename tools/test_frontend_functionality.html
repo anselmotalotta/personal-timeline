@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Functionality Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 1200px; margin: 0 auto; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 8px; }
+        .result { margin: 10px 0; padding: 10px; border-radius: 4px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin: 5px; }
+        button:hover { background: #0056b3; }
+        .iframe-container { width: 100%; height: 600px; border: 1px solid #ddd; margin: 10px 0; }
+        .summary { background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>🎯 Frontend Functionality Test</h1>
+    
+    <div class="summary">
+        <h2>📊 Test Summary</h2>
+        <div id="test-summary">
+            <div class="result info">🔄 Running comprehensive functionality tests...</div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>1. API Data Verification</h2>
+        <button onclick="testAPIData()">Verify API Data</button>
+        <div id="api-data-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. Frontend Component Test</h2>
+        <button onclick="testFrontendComponents()">Test Frontend Components</button>
+        <div id="frontend-component-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. Live Frontend View</h2>
+        <button onclick="loadLiveFrontend()">Load Live Frontend</button>
+        <div id="live-frontend-container"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. User Experience Test</h2>
+        <button onclick="testUserExperience()">Test User Experience</button>
+        <div id="user-experience-results"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8086';
+        const FRONTEND_BASE = 'http://localhost:52692';
+        
+        let testResults = {
+            apiData: false,
+            frontendComponents: false,
+            userExperience: false
+        };
+        
+        function showResult(containerId, message, type = 'info') {
+            const container = document.getElementById(containerId);
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = message;
+            container.appendChild(div);
+        }
+        
+        function updateSummary() {
+            const container = document.getElementById('test-summary');
+            const passedTests = Object.values(testResults).filter(Boolean).length;
+            const totalTests = Object.keys(testResults).length;
+            
+            let summaryClass = 'info';
+            let summaryIcon = '🔄';
+            
+            if (passedTests === totalTests) {
+                summaryClass = 'success';
+                summaryIcon = '✅';
+            } else if (passedTests > 0) {
+                summaryClass = 'warning';
+                summaryIcon = '⚠️';
+            } else {
+                summaryClass = 'error';
+                summaryIcon = '❌';
+            }
+            
+            container.innerHTML = `
+                <div class="result ${summaryClass}">
+                    ${summaryIcon} Test Results: ${passedTests}/${totalTests} tests passed
+                    <br>API Data: ${testResults.apiData ? '✅' : '❌'}
+                    <br>Frontend Components: ${testResults.frontendComponents ? '✅' : '❌'}
+                    <br>User Experience: ${testResults.userExperience ? '✅' : '❌'}
+                </div>
+            `;
+        }
+        
+        async function testAPIData() {
+            const container = document.getElementById('api-data-results');
+            container.innerHTML = '';
+            
+            showResult('api-data-results', '🔄 Testing API data availability...', 'info');
+            
+            let apiDataWorking = true;
+            
+            try {
+                // Test stories
+                const storiesResponse = await fetch(`${API_BASE}/stories`);
+                const storiesData = await storiesResponse.json();
+                
+                if (storiesData.stories && storiesData.stories.length > 0) {
+                    showResult('api-data-results', `✅ Stories: ${storiesData.count} stories available`, 'success');
+                    
+                    // Test story details
+                    const storyResponse = await fetch(`${API_BASE}/stories/${storiesData.stories[0].id}`);
+                    const storyData = await storyResponse.json();
+                    
+                    if (storyData.chapters && storyData.chapters.length > 0) {
+                        const mediaCount = storyData.chapters.reduce((sum, ch) => sum + (ch.media_elements ? ch.media_elements.length : 0), 0);
+                        showResult('api-data-results', `📖 Story Details: "${storyData.title}" has ${storyData.chapters.length} chapters with ${mediaCount} media elements`, 'success');
+                    }
+                } else {
+                    showResult('api-data-results', '❌ No stories found', 'error');
+                    apiDataWorking = false;
+                }
+                
+                // Test people
+                const peopleResponse = await fetch(`${API_BASE}/people`);
+                const peopleData = await peopleResponse.json();
+                
+                if (peopleData.people && peopleData.people.length > 0) {
+                    showResult('api-data-results', `✅ People: ${peopleData.count} people detected`, 'success');
+                } else {
+                    showResult('api-data-results', '❌ No people found', 'error');
+                    apiDataWorking = false;
+                }
+                
+                // Test galleries
+                const galleriesResponse = await fetch(`${API_BASE}/galleries`);
+                const galleriesData = await galleriesResponse.json();
+                
+                if (galleriesData.total_photos > 0) {
+                    showResult('api-data-results', `✅ Galleries: ${galleriesData.total_photos} photos available`, 'success');
+                } else {
+                    showResult('api-data-results', '❌ No photos in galleries', 'error');
+                    apiDataWorking = false;
+                }
+                
+                testResults.apiData = apiDataWorking;
+                updateSummary();
+                
+            } catch (error) {
+                showResult('api-data-results', `❌ API test failed: ${error.message}`, 'error');
+                testResults.apiData = false;
+                updateSummary();
+            }
+        }
+        
+        async function testFrontendComponents() {
+            const container = document.getElementById('frontend-component-results');
+            container.innerHTML = '';
+            
+            showResult('frontend-component-results', '🔄 Testing frontend component functionality...', 'info');
+            
+            try {
+                // Test if frontend is accessible
+                const response = await fetch(FRONTEND_BASE);
+                if (response.ok) {
+                    showResult('frontend-component-results', '✅ Frontend is accessible', 'success');
+                } else {
+                    showResult('frontend-component-results', '❌ Frontend not accessible', 'error');
+                    testResults.frontendComponents = false;
+                    updateSummary();
+                    return;
+                }
+                
+                // Test if React bundle loads
+                const bundleResponse = await fetch(`${FRONTEND_BASE}/static/js/bundle.js`);
+                if (bundleResponse.ok) {
+                    showResult('frontend-component-results', '✅ React bundle loads successfully', 'success');
+                    
+                    const bundleContent = await bundleResponse.text();
+                    if (bundleContent.includes('localhost:8086')) {
+                        showResult('frontend-component-results', '✅ Frontend configured for API connection', 'success');
+                    } else {
+                        showResult('frontend-component-results', '⚠️ API connection configuration unclear', 'warning');
+                    }
+                } else {
+                    showResult('frontend-component-results', '❌ React bundle not loading', 'error');
+                    testResults.frontendComponents = false;
+                    updateSummary();
+                    return;
+                }
+                
+                // Test CORS
+                try {
+                    const corsTest = await fetch(`${API_BASE}/status`);
+                    if (corsTest.ok) {
+                        showResult('frontend-component-results', '✅ CORS working - frontend can reach API', 'success');
+                        testResults.frontendComponents = true;
+                    } else {
+                        showResult('frontend-component-results', '❌ CORS issue detected', 'error');
+                        testResults.frontendComponents = false;
+                    }
+                } catch (corsError) {
+                    showResult('frontend-component-results', `❌ CORS error: ${corsError.message}`, 'error');
+                    testResults.frontendComponents = false;
+                }
+                
+                updateSummary();
+                
+            } catch (error) {
+                showResult('frontend-component-results', `❌ Frontend component test failed: ${error.message}`, 'error');
+                testResults.frontendComponents = false;
+                updateSummary();
+            }
+        }
+        
+        function loadLiveFrontend() {
+            const container = document.getElementById('live-frontend-container');
+            container.innerHTML = `
+                <div class="result info">📱 Loading live frontend view...</div>
+                <iframe src="${FRONTEND_BASE}" 
+                        class="iframe-container" 
+                        style="width: 100%; height: 600px; border: 1px solid #ddd;">
+                </iframe>
+                <div class="result info">
+                    👆 The live frontend is loaded above. You should see:
+                    <br>• Navigation tabs (Stories, People, Galleries, etc.)
+                    <br>• AI Status badge
+                    <br>• Content in each tab (stories, people, photos)
+                    <br>• If you see empty tabs or "loading" states, there may be an issue
+                </div>
+            `;
+        }
+        
+        async function testUserExperience() {
+            const container = document.getElementById('user-experience-results');
+            container.innerHTML = '';
+            
+            showResult('user-experience-results', '🔄 Testing user experience...', 'info');
+            
+            // This is a comprehensive test that checks if the user would see working functionality
+            let uxWorking = true;
+            
+            try {
+                // Check if all required data is available
+                const [storiesRes, peopleRes, galleriesRes] = await Promise.all([
+                    fetch(`${API_BASE}/stories`),
+                    fetch(`${API_BASE}/people`),
+                    fetch(`${API_BASE}/galleries`)
+                ]);
+                
+                const [storiesData, peopleData, galleriesData] = await Promise.all([
+                    storiesRes.json(),
+                    peopleRes.json(),
+                    galleriesRes.json()
+                ]);
+                
+                // Check Stories tab
+                if (storiesData.stories && storiesData.stories.length > 0) {
+                    showResult('user-experience-results', `✅ Stories Tab: User will see ${storiesData.count} stories`, 'success');
+                } else {
+                    showResult('user-experience-results', '❌ Stories Tab: User will see empty stories', 'error');
+                    uxWorking = false;
+                }
+                
+                // Check People tab
+                if (peopleData.people && peopleData.people.length > 0) {
+                    showResult('user-experience-results', `✅ People Tab: User will see ${peopleData.count} people`, 'success');
+                } else {
+                    showResult('user-experience-results', '❌ People Tab: User will see no people', 'error');
+                    uxWorking = false;
+                }
+                
+                // Check Galleries tab
+                if (galleriesData.total_photos > 0) {
+                    showResult('user-experience-results', `✅ Galleries Tab: User will see ${galleriesData.total_photos} photos`, 'success');
+                } else {
+                    showResult('user-experience-results', '❌ Galleries Tab: User will see no photos', 'error');
+                    uxWorking = false;
+                }
+                
+                // Test Chat functionality
+                const chatResponse = await fetch(`${API_BASE}/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: 'How many photos do I have?' })
+                });
+                
+                if (chatResponse.ok) {
+                    const chatData = await chatResponse.json();
+                    if (chatData.response && chatData.response.includes('photo')) {
+                        showResult('user-experience-results', '✅ Chat: User will get data-driven responses', 'success');
+                    } else {
+                        showResult('user-experience-results', '⚠️ Chat: Responses may be generic', 'warning');
+                    }
+                } else {
+                    showResult('user-experience-results', '❌ Chat: Not working', 'error');
+                    uxWorking = false;
+                }
+                
+                if (uxWorking) {
+                    showResult('user-experience-results', '🎉 Overall: User will see a fully functional personal archive with real data!', 'success');
+                } else {
+                    showResult('user-experience-results', '⚠️ Overall: User may see some empty sections or limited functionality', 'warning');
+                }
+                
+                testResults.userExperience = uxWorking;
+                updateSummary();
+                
+            } catch (error) {
+                showResult('user-experience-results', `❌ User experience test failed: ${error.message}`, 'error');
+                testResults.userExperience = false;
+                updateSummary();
+            }
+        }
+        
+        // Auto-run tests on page load
+        window.onload = function() {
+            setTimeout(() => {
+                testAPIData();
+                setTimeout(() => {
+                    testFrontendComponents();
+                    setTimeout(() => {
+                        testUserExperience();
+                    }, 1000);
+                }, 1000);
+            }, 500);
+        };
+    </script>
+</body>
+</html>

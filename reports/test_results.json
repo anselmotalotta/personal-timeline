@@ -1,0 +1,70 @@
+{
+  "ai_config": {
+    "status": "PASS",
+    "openai_configured": true,
+    "anthropic_configured": false,
+    "google_configured": false,
+    "provider_hierarchy": [
+      "openai",
+      "anthropic",
+      "google"
+    ]
+  },
+  "ai_providers": {
+    "status": "PASS",
+    "providers": {
+      "openai": {
+        "status": "unavailable",
+        "priority": 1,
+        "quality": "excellent",
+        "cost_tier": "high",
+        "has_credentials": true,
+        "last_error": null
+      },
+      "anthropic": {
+        "status": "unavailable",
+        "priority": 2,
+        "quality": "excellent",
+        "cost_tier": "high",
+        "has_credentials": false,
+        "last_error": null
+      },
+      "google": {
+        "status": "unavailable",
+        "priority": 3,
+        "quality": "good",
+        "cost_tier": "medium",
+        "has_credentials": false,
+        "last_error": null
+      }
+    },
+    "available_count": 0
+  },
+  "ai_api": {
+    "status": "PASS",
+    "api_response": {
+      "ai_status": "partial",
+      "ai_message": "AI features available via openai",
+      "status_color": "yellow",
+      "available_providers": [
+        "openai"
+      ],
+      "total_providers": 3,
+      "features": {
+        "story_generation": true,
+        "people_intelligence": true,
+        "smart_galleries": true,
+        "semantic_search": true
+      }
+    },
+    "ai_status": "partial",
+    "available_providers": [
+      "openai"
+    ]
+  },
+  "data_processing": {
+    "status": "PASS",
+    "processor_initialized": true,
+    "data_path": "MyData"
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "posts": [
+    {
+      "timestamp": "2023-01-15T10:30:00Z",
+      "data": [
+        {
+          "post": "Had an amazing day at the beach with friends!"
+        }
+      ],
+      "attachments": [
+        {
+          "data": [
+            {
+              "media": {
+                "uri": "photos/beach_day.jpg"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2023-02-20T15:45:00Z",
+      "data": [
+        {
+          "post": "Just finished reading an incredible book about AI"
+        }
+      ]
+    }
+  ],
+  "photos": [
+    {
+      "uri": "photos/beach_day.jpg",
+      "creation_timestamp": 1673780200,
+      "media_metadata": {
+        "photo_metadata": {
+          "exif_data": [
+            {
+              "latitude": 40.7128,
+              "longitude": -74.006
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "messages": [
+    {
+      "participants": [
+        {
+          "name": "John Doe"
+        },
+        {
+          "name": "Me"
+        }
+      ],
+      "messages": [
+        {
+          "sender_name": "John Doe",
+          "timestamp_ms": 1673780200000,
+          "content": "Hey, want to grab coffee?"
+        },
+        {
+          "sender_name": "Me",
+          "timestamp_ms": 1673780260000,
+          "content": "Sure! How about 3pm?"
+        }
+      ]
+    }
+  ]
+}

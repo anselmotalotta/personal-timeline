@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Frontend Status Test</title>
+</head>
+<body>
+    <h1>Testing AI Status API</h1>
+    <div id="status">Loading...</div>
+    
+    <script>
+        async function testAIStatus() {
+            try {
+                const response = await fetch('http://localhost:8086/status');
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('status').innerHTML = `
+                        <h2>AI Status: ${data.ai_status}</h2>
+                        <p>Message: ${data.ai_message}</p>
+                        <p>Available Providers: ${data.available_providers.join(', ') || 'None'}</p>
+                        <p>Features:</p>
+                        <ul>
+                            <li>Story Generation: ${data.features.story_generation ? '✅' : '❌'}</li>
+                            <li>People Intelligence: ${data.features.people_intelligence ? '✅' : '❌'}</li>
+                            <li>Smart Galleries: ${data.features.smart_galleries ? '✅' : '❌'}</li>
+                            <li>Semantic Search: ${data.features.semantic_search ? '✅' : '❌'}</li>
+                        </ul>
+                    `;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                document.getElementById('status').innerHTML = `
+                    <h2 style="color: red;">❌ AI Services Unavailable</h2>
+                    <p>Error: ${error.message}</p>
+                    <p>This means all AI features should be disabled in the frontend.</p>
+                    <h3>Expected Frontend Behavior:</h3>
+                    <ul>
+                        <li>🔴 Red status badge: "AI Features Unavailable"</li>
+                        <li>AI Search replaced with setup instructions</li>
+                        <li>Feature buttons disabled with tooltips</li>
+                        <li>"AI Features Disabled" card shown</li>
+                    </ul>
+                `;
+            }
+        }
+        
+        testAIStatus();
+    </script>
+</body>
+</html>

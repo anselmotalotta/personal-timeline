@@ -1,0 +1,554 @@
+{
+  "timestamp": 1767843374.968946,
+  "verification_rounds": 3,
+  "consistency_score": 100.0,
+  "summary": {
+    "total_tests": 5,
+    "consistent": 5,
+    "inconsistent": 0,
+    "failed": 0
+  },
+  "consistency_report": {
+    "people_data": "CONSISTENT",
+    "stories_data": "CONSISTENT",
+    "ai_status": "CONSISTENT",
+    "story_generation": "CONSISTENT",
+    "frontend_connectivity": "CONSISTENT"
+  },
+  "detailed_results": [
+    {
+      "test": "People Data",
+      "round": 1,
+      "result": "SUCCESS",
+      "data": {
+        "profiles": [
+          {
+            "id": "person_0",
+            "name": null,
+            "representative_photos": [
+              "/app/MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/1133187813959132.jpg",
+              "/app/MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/1320047858163368.jpg"
+            ],
+            "photo_count": 2,
+            "relationship_strength": 0.2,
+            "privacy_level": "private",
+            "first_seen": "2025-12-16T00:15:20",
+            "last_seen": "2025-12-16T00:15:20",
+            "interaction_timeline": 2
+          },
+          {
+            "id": "person_1",
+            "name": null,
+            "representative_photos": [
+              "/app/MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/2238862209467823.jpg"
+            ],
+            "photo_count": 1,
+            "relationship_strength": 0.1,
+            "privacy_level": "private",
+            "first_seen": "2025-12-16T00:15:20",
+            "last_seen": "2025-12-16T00:15:20",
+            "interaction_timeline": 1
+          },
+          {
+            "id": "person_2",
+            "name": null,
+            "representative_photos": [
+              "/app/MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/865298563816311.jpg"
+            ],
+            "photo_count": 1,
+            "relationship_strength": 0.1,
+            "privacy_level": "private",
+            "first_seen": "2025-12-16T00:15:20",
+            "last_seen": "2025-12-16T00:15:20",
+            "interaction_timeline": 1
+          },
+          {
+            "id": "person_3",
+            "name": null,
+            "representative_photos": [
+              "/app/MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/282567897052613.jpg"
+            ],
+            "photo_count": 1,
+            "relationship_strength": 0.1,
+            "privacy_level": "private",
+            "first_seen": "2025-12-16T00:15:20",
+            "last_seen": "2025-12-16T00:15:20",
+            "interaction_timeline": 1
+          }
+        ],
+        "count": 4
+      },
+      "timestamp": 1767843337.3721883
+    },
+    {
+      "test": "People Data",
+      "round": 2,
+      "result": "SUCCESS",
+      "data": {
+        "profiles": [
+          {
+            "id": "person_0",
+            "name": null,
+            "representative_photos": [
+              "/app/MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/1133187813959132.jpg",
+              "/app/MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/1320047858163368.jpg"
+            ],
+            "photo_count": 2,
+            "relationship_strength": 0.2,
+            "privacy_level": "private",
+            "first_seen": "2025-12-16T00:15:20",
+            "last_seen": "2025-12-16T00:15:20",
+            "interaction_timeline": 2
+          },
+          {
+            "id": "person_1",
+            "name": null,
+            "representative_photos": [
+              "/app/MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/2238862209467823.jpg"
+            ],
+            "photo_count": 1,
+            "relationship_strength": 0.1,
+            "privacy_level": "private",
+            "first_seen": "2025-12-16T00:15:20",
+            "last_seen": "2025-12-16T00:15:20",
+            "interaction_timeline": 1
+          },
+          {
+            "id": "person_2",
+            "name": null,
+            "representative_photos": [
+              "/app/MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/865298563816311.jpg"
+            ],
+            "photo_count": 1,
+            "relationship_strength": 0.1,
+            "privacy_level": "private",
+            "first_seen": "2025-12-16T00:15:20",
+            "last_seen": "2025-12-16T00:15:20",
+            "interaction_timeline": 1
+          },
+          {
+            "id": "person_3",
+            "name": null,
+            "representative_photos": [
+              "/app/MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/282567897052613.jpg"
+            ],
+            "photo_count": 1,
+            "relationship_strength": 0.1,
+            "privacy_level": "private",
+            "first_seen": "2025-12-16T00:15:20",
+            "last_seen": "2025-12-16T00:15:20",
+            "interaction_timeline": 1
+          }
+        ],
+        "count": 4
+      },
+      "timestamp": 1767843338.3801706
+    },
+    {
+      "test": "People Data",
+      "round": 3,
+      "result": "SUCCESS",
+      "data": {
+        "profiles": [
+          {
+            "id": "person_0",
+            "name": null,
+            "representative_photos": [
+              "/app/MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/1133187813959132.jpg",
+              "/app/MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/1320047858163368.jpg"
+            ],
+            "photo_count": 2,
+            "relationship_strength": 0.2,
+            "privacy_level": "private",
+            "first_seen": "2025-12-16T00:15:20",
+            "last_seen": "2025-12-16T00:15:20",
+            "interaction_timeline": 2
+          },
+          {
+            "id": "person_1",
+            "name": null,
+            "representative_photos": [
+              "/app/MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/2238862209467823.jpg"
+            ],
+            "photo_count": 1,
+            "relationship_strength": 0.1,
+            "privacy_level": "private",
+            "first_seen": "2025-12-16T00:15:20",
+            "last_seen": "2025-12-16T00:15:20",
+            "interaction_timeline": 1
+          },
+          {
+            "id": "person_2",
+            "name": null,
+            "representative_photos": [
+              "/app/MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/865298563816311.jpg"
+            ],
+            "photo_count": 1,
+            "relationship_strength": 0.1,
+            "privacy_level": "private",
+            "first_seen": "2025-12-16T00:15:20",
+            "last_seen": "2025-12-16T00:15:20",
+            "interaction_timeline": 1
+          },
+          {
+            "id": "person_3",
+            "name": null,
+            "representative_photos": [
+              "/app/MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/282567897052613.jpg"
+            ],
+            "photo_count": 1,
+            "relationship_strength": 0.1,
+            "privacy_level": "private",
+            "first_seen": "2025-12-16T00:15:20",
+            "last_seen": "2025-12-16T00:15:20",
+            "interaction_timeline": 1
+          }
+        ],
+        "count": 4
+      },
+      "timestamp": 1767843339.3829525
+    },
+    {
+      "test": "Stories Data",
+      "round": 1,
+      "result": "SUCCESS",
+      "data": {
+        "stories": [
+          {
+            "id": "6b4ea53b98eb",
+            "title": "A Story of Recent Memories",
+            "narrative_mode": "chronological",
+            "chapter_count": 6,
+            "quality_score": 0.9999999999999999,
+            "generated_at": "2026-01-07T15:14:08.241866",
+            "total_media_references": 0
+          },
+          {
+            "id": "1fef920e296c",
+            "title": "A Story of My Recent Memories",
+            "narrative_mode": "chronological",
+            "chapter_count": 6,
+            "quality_score": 0.9999999999999999,
+            "generated_at": "2026-01-07T14:46:53.753524",
+            "total_media_references": 0
+          }
+        ],
+        "count": 2
+      },
+      "timestamp": 1767843340.3917315
+    },
+    {
+      "test": "Stories Data",
+      "round": 2,
+      "result": "SUCCESS",
+      "data": {
+        "stories": [
+          {
+            "id": "6b4ea53b98eb",
+            "title": "A Story of Recent Memories",
+            "narrative_mode": "chronological",
+            "chapter_count": 6,
+            "quality_score": 0.9999999999999999,
+            "generated_at": "2026-01-07T15:14:08.241866",
+            "total_media_references": 0
+          },
+          {
+            "id": "1fef920e296c",
+            "title": "A Story of My Recent Memories",
+            "narrative_mode": "chronological",
+            "chapter_count": 6,
+            "quality_score": 0.9999999999999999,
+            "generated_at": "2026-01-07T14:46:53.753524",
+            "total_media_references": 0
+          }
+        ],
+        "count": 2
+      },
+      "timestamp": 1767843341.393735
+    },
+    {
+      "test": "Stories Data",
+      "round": 3,
+      "result": "SUCCESS",
+      "data": {
+        "stories": [
+          {
+            "id": "6b4ea53b98eb",
+            "title": "A Story of Recent Memories",
+            "narrative_mode": "chronological",
+            "chapter_count": 6,
+            "quality_score": 0.9999999999999999,
+            "generated_at": "2026-01-07T15:14:08.241866",
+            "total_media_references": 0
+          },
+          {
+            "id": "1fef920e296c",
+            "title": "A Story of My Recent Memories",
+            "narrative_mode": "chronological",
+            "chapter_count": 6,
+            "quality_score": 0.9999999999999999,
+            "generated_at": "2026-01-07T14:46:53.753524",
+            "total_media_references": 0
+          }
+        ],
+        "count": 2
+      },
+      "timestamp": 1767843342.4006758
+    },
+    {
+      "test": "AI Status",
+      "round": 1,
+      "result": "SUCCESS",
+      "data": {
+        "ai_status": "partial",
+        "ai_message": "AI features available via openai",
+        "status_color": "yellow",
+        "available_providers": [
+          "openai"
+        ],
+        "total_providers": 3,
+        "features": {
+          "story_generation": true,
+          "people_intelligence": true,
+          "smart_galleries": true,
+          "semantic_search": true
+        }
+      },
+      "timestamp": 1767843343.4026356
+    },
+    {
+      "test": "AI Status",
+      "round": 2,
+      "result": "SUCCESS",
+      "data": {
+        "ai_status": "partial",
+        "ai_message": "AI features available via openai",
+        "status_color": "yellow",
+        "available_providers": [
+          "openai"
+        ],
+        "total_providers": 3,
+        "features": {
+          "story_generation": true,
+          "people_intelligence": true,
+          "smart_galleries": true,
+          "semantic_search": true
+        }
+      },
+      "timestamp": 1767843344.408168
+    },
+    {
+      "test": "AI Status",
+      "round": 3,
+      "result": "SUCCESS",
+      "data": {
+        "ai_status": "partial",
+        "ai_message": "AI features available via openai",
+        "status_color": "yellow",
+        "available_providers": [
+          "openai"
+        ],
+        "total_providers": 3,
+        "features": {
+          "story_generation": true,
+          "people_intelligence": true,
+          "smart_galleries": true,
+          "semantic_search": true
+        }
+      },
+      "timestamp": 1767843345.413448
+    },
+    {
+      "test": "Chat Message 1",
+      "round": 1,
+      "result": "SUCCESS",
+      "data": {
+        "response_length": 96
+      },
+      "timestamp": 1767843346.4185877
+    },
+    {
+      "test": "Chat Message 1",
+      "round": 2,
+      "result": "SUCCESS",
+      "data": {
+        "response_length": 96
+      },
+      "timestamp": 1767843347.420868
+    },
+    {
+      "test": "Chat Message 1",
+      "round": 3,
+      "result": "SUCCESS",
+      "data": {
+        "response_length": 96
+      },
+      "timestamp": 1767843348.4247334
+    },
+    {
+      "test": "Chat Message 2",
+      "round": 1,
+      "result": "SUCCESS",
+      "data": {
+        "response_length": 97
+      },
+      "timestamp": 1767843349.4292567
+    },
+    {
+      "test": "Chat Message 2",
+      "round": 2,
+      "result": "SUCCESS",
+      "data": {
+        "response_length": 97
+      },
+      "timestamp": 1767843350.434255
+    },
+    {
+      "test": "Chat Message 2",
+      "round": 3,
+      "result": "SUCCESS",
+      "data": {
+        "response_length": 97
+      },
+      "timestamp": 1767843351.4394238
+    },
+    {
+      "test": "Chat Message 3",
+      "round": 1,
+      "result": "SUCCESS",
+      "data": {
+        "response_length": 100
+      },
+      "timestamp": 1767843352.4410365
+    },
+    {
+      "test": "Chat Message 3",
+      "round": 2,
+      "result": "SUCCESS",
+      "data": {
+        "response_length": 100
+      },
+      "timestamp": 1767843353.4461243
+    },
+    {
+      "test": "Chat Message 3",
+      "round": 3,
+      "result": "SUCCESS",
+      "data": {
+        "response_length": 100
+      },
+      "timestamp": 1767843354.451712
+    },
+    {
+      "test": "Story Generation",
+      "round": 1,
+      "result": "SUCCESS",
+      "data": {
+        "chapters": 1,
+        "quality": 0.3
+      },
+      "timestamp": 1767843356.6308215
+    },
+    {
+      "test": "Story Generation",
+      "round": 2,
+      "result": "SUCCESS",
+      "data": {
+        "chapters": 1,
+        "quality": 0.3
+      },
+      "timestamp": 1767843359.7771716
+    },
+    {
+      "test": "Story Generation",
+      "round": 3,
+      "result": "SUCCESS",
+      "data": {
+        "chapters": 1,
+        "quality": 0.3
+      },
+      "timestamp": 1767843362.9821205
+    },
+    {
+      "test": "Frontend Connectivity",
+      "round": 1,
+      "result": "SUCCESS",
+      "data": {
+        "ai_status": "partial"
+      },
+      "timestamp": 1767843365.087555
+    },
+    {
+      "test": "Frontend Connectivity",
+      "round": 2,
+      "result": "SUCCESS",
+      "data": {
+        "ai_status": "partial"
+      },
+      "timestamp": 1767843366.1773424
+    },
+    {
+      "test": "Frontend Connectivity",
+      "round": 3,
+      "result": "SUCCESS",
+      "data": {
+        "ai_status": "partial"
+      },
+      "timestamp": 1767843367.2833748
+    },
+    {
+      "test": "People DB",
+      "round": 1,
+      "result": "SUCCESS",
+      "data": {
+        "people_count": 4
+      },
+      "timestamp": 1767843368.3897548
+    },
+    {
+      "test": "People DB",
+      "round": 2,
+      "result": "SUCCESS",
+      "data": {
+        "people_count": 4
+      },
+      "timestamp": 1767843369.5219667
+    },
+    {
+      "test": "People DB",
+      "round": 3,
+      "result": "SUCCESS",
+      "data": {
+        "people_count": 4
+      },
+      "timestamp": 1767843370.6386366
+    },
+    {
+      "test": "Stories DB",
+      "round": 1,
+      "result": "SUCCESS",
+      "data": {
+        "stories_count": 2
+      },
+      "timestamp": 1767843371.7736492
+    },
+    {
+      "test": "Stories DB",
+      "round": 2,
+      "result": "SUCCESS",
+      "data": {
+        "stories_count": 2
+      },
+      "timestamp": 1767843372.8876085
+    },
+    {
+      "test": "Stories DB",
+      "round": 3,
+      "result": "SUCCESS",
+      "data": {
+        "stories_count": 2
+      },
+      "timestamp": 1767843373.9686203
+    }
+  ]
+}

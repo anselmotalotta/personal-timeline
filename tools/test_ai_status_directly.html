@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Status Test</title>
+</head>
+<body>
+    <h1>AI Status Test</h1>
+    <div id="status">Loading...</div>
+    <div id="features"></div>
+    
+    <script>
+        async function testAIStatus() {
+            try {
+                console.log('Fetching AI status...');
+                const response = await fetch('http://localhost:8086/status');
+                const data = await response.json();
+                
+                console.log('AI Status Data:', data);
+                
+                document.getElementById('status').innerHTML = `
+                    <h2>AI Status: ${data.ai_status}</h2>
+                    <p>Message: ${data.ai_message}</p>
+                    <p>Available Providers: ${data.available_providers.join(', ')}</p>
+                `;
+                
+                document.getElementById('features').innerHTML = `
+                    <h3>Features:</h3>
+                    <ul>
+                        <li>Story Generation: ${data.features.story_generation}</li>
+                        <li>People Intelligence: ${data.features.people_intelligence}</li>
+                        <li>Smart Galleries: ${data.features.smart_galleries}</li>
+                        <li>Semantic Search: ${data.features.semantic_search}</li>
+                    </ul>
+                `;
+                
+                // Test loading stories
+                console.log('Testing stories API...');
+                const storiesResponse = await fetch('http://localhost:8086/stories');
+                const storiesData = await storiesResponse.json();
+                console.log('Stories:', storiesData);
+                
+                // Test loading people
+                console.log('Testing people API...');
+                const peopleResponse = await fetch('http://localhost:8086/people');
+                const peopleData = await peopleResponse.json();
+                console.log('People:', peopleData);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('status').innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        }
+        
+        testAIStatus();
+    </script>
+</body>
+</html>

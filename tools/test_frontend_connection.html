@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Frontend AI Connection Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .test { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .pass { background-color: #d4edda; border-color: #c3e6cb; }
+        .fail { background-color: #f8d7da; border-color: #f5c6cb; }
+        .loading { background-color: #fff3cd; border-color: #ffeaa7; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Frontend AI Connection Test</h1>
+    <p>Testing if frontend can connect to AI services...</p>
+    
+    <div id="test1" class="test loading">
+        <h3>Test 1: Direct Connection to localhost:8087</h3>
+        <p>Status: <span id="status1">Testing...</span></p>
+        <pre id="result1">Loading...</pre>
+    </div>
+    
+    <div id="test2" class="test loading">
+        <h3>Test 2: Connection to Docker AI Services (localhost:8086)</h3>
+        <p>Status: <span id="status2">Testing...</span></p>
+        <pre id="result2">Loading...</pre>
+    </div>
+    
+    <div id="test3" class="test loading">
+        <h3>Test 3: CORS Check</h3>
+        <p>Status: <span id="status3">Testing...</span></p>
+        <pre id="result3">Loading...</pre>
+    </div>
+
+    <script>
+        async function testConnection(url, testId) {
+            const statusEl = document.getElementById(`status${testId}`);
+            const resultEl = document.getElementById(`result${testId}`);
+            const testEl = document.getElementById(`test${testId}`);
+            
+            try {
+                const response = await fetch(`${url}/status`);
+                const data = await response.json();
+                
+                statusEl.textContent = '✅ SUCCESS';
+                testEl.className = 'test pass';
+                resultEl.textContent = JSON.stringify(data, null, 2);
+                
+                return true;
+            } catch (error) {
+                statusEl.textContent = '❌ FAILED';
+                testEl.className = 'test fail';
+                resultEl.textContent = `Error: ${error.message}`;
+                
+                return false;
+            }
+        }
+        
+        async function runTests() {
+            console.log('🚀 Starting frontend connection tests...');
+            
+            // Test 1: Development server
+            await testConnection('http://localhost:8087', 1);
+            
+            // Test 2: Docker AI services
+            await testConnection('http://localhost:8086', 2);
+            
+            // Test 3: CORS test (same as test 1 but checking headers)
+            try {
+                const response = await fetch('http://localhost:8087/status', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const data = await response.json();
+                
+                document.getElementById('status3').textContent = '✅ CORS OK';
+                document.getElementById('test3').className = 'test pass';
+                document.getElementById('result3').textContent = `CORS headers present, response: ${JSON.stringify(data, null, 2)}`;
+                
+            } catch (error) {
+                document.getElementById('status3').textContent = '❌ CORS FAILED';
+                document.getElementById('test3').className = 'test fail';
+                document.getElementById('result3').textContent = `CORS Error: ${error.message}`;
+            }
+        }
+        
+        // Run tests when page loads
+        window.onload = runTests;
+    </script>
+</body>
+</html>

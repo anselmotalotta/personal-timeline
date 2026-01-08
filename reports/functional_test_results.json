@@ -1,0 +1,237 @@
+{
+  "timestamp": "2026-01-07T15:33:56.068627",
+  "overall_status": "PASS",
+  "summary": {
+    "total_categories": 9,
+    "passed_categories": 9,
+    "failed_categories": 0,
+    "success_rate": "100.0%"
+  },
+  "detailed_results": {
+    "ai_status_endpoint": {
+      "status": "PASS",
+      "tests": {
+        "status_endpoint_accessible": true,
+        "returns_json": true,
+        "has_ai_status": true,
+        "has_ai_message": true,
+        "has_available_providers": true,
+        "has_features": true,
+        "features_is_dict": true,
+        "has_story_generation": true,
+        "has_people_intelligence": true,
+        "has_smart_galleries": true,
+        "has_semantic_search": true,
+        "openai_detected": true
+      },
+      "score": "12/12",
+      "response_data": {
+        "ai_status": "partial",
+        "ai_message": "AI features available via openai",
+        "status_color": "yellow",
+        "available_providers": [
+          "openai"
+        ],
+        "total_providers": 3,
+        "features": {
+          "story_generation": true,
+          "people_intelligence": true,
+          "smart_galleries": true,
+          "semantic_search": true
+        }
+      }
+    },
+    "story_generation": {
+      "status": "PASS",
+      "tests": {
+        "service_status_works": true,
+        "has_statistics": true,
+        "has_chronological_method": true,
+        "has_thematic_method": true,
+        "has_people_method": true,
+        "has_place_method": true,
+        "has_get_stories_method": true,
+        "has_delete_method": true,
+        "get_all_stories_works": true,
+        "stories_returns_list": false,
+        "generate_chronological_story_exists": true,
+        "generate_chronological_story_callable": true,
+        "generate_thematic_story_exists": true,
+        "generate_thematic_story_callable": true,
+        "generate_people_story_exists": true,
+        "generate_people_story_callable": true,
+        "generate_place_story_exists": true,
+        "generate_place_story_callable": true
+      },
+      "score": "17/18",
+      "service_status": {
+        "service": "story_generation",
+        "status": "active",
+        "statistics": {
+          "total_stories": 0,
+          "total_chapters": 0,
+          "stories_by_mode": {
+            "chronological": 0,
+            "thematic": 0,
+            "people_centered": 0,
+            "place_centered": 0
+          }
+        },
+        "database_path": "MyData/stories.db"
+      }
+    },
+    "people_intelligence": {
+      "status": "PASS",
+      "tests": {
+        "service_status_works": true,
+        "has_statistics": true,
+        "has_detect_faces": true,
+        "has_analyze_relationships": true,
+        "has_get_all_people": true,
+        "has_get_person_by_id": true,
+        "has_get_relationships": true,
+        "has_generate_insights": true,
+        "has_privacy_settings": true,
+        "get_all_people_works": true,
+        "people_returns_list": false,
+        "analyze_relationships_error": "PeopleIntelligenceService.analyze_relationships() missing 1 required positional argument: 'social_data'"
+      },
+      "score": "10/12",
+      "service_status": {
+        "service": "people_intelligence",
+        "status": "active",
+        "statistics": {
+          "total_people": 0,
+          "total_face_detections": 0,
+          "total_relationships": 0
+        },
+        "database_path": "MyData/people_intelligence.db"
+      }
+    },
+    "smart_galleries": {
+      "status": "PASS",
+      "tests": {
+        "processor_exists": true,
+        "has_photo_processing": false,
+        "has_extract_metadata": true,
+        "has_processing_status": true,
+        "extract_metadata_callable": true,
+        "get_processing_status_works": true,
+        "status_returns_dict": true
+      },
+      "score": "6/7"
+    },
+    "semantic_search": {
+      "status": "PASS",
+      "tests": {
+        "ai_services_running": true,
+        "status_endpoint_works": true,
+        "search_capability_indicated": true
+      },
+      "score": "3/3"
+    },
+    "data_import": {
+      "status": "PASS",
+      "tests": {
+        "processor_initialized": true,
+        "has_data_path": true,
+        "data_path_exists": true,
+        "has_process_facebook_data": true,
+        "process_facebook_data_callable": true,
+        "process_facebook_data_has_signature": true,
+        "has_process_google_photos": true,
+        "process_google_photos_callable": true,
+        "process_google_photos_has_signature": true,
+        "has_process_apple_health": true,
+        "process_apple_health_callable": true,
+        "process_apple_health_has_signature": true,
+        "has_process_location_data": true,
+        "process_location_data_callable": true,
+        "process_location_data_has_signature": true,
+        "get_processing_status_works": true,
+        "status_is_dict": true
+      },
+      "score": "17/17",
+      "available_methods": [
+        "process_facebook_data",
+        "process_google_photos",
+        "process_apple_health",
+        "process_location_data"
+      ]
+    },
+    "provider_management": {
+      "status": "PASS",
+      "tests": {
+        "provider_manager_exists": true,
+        "has_get_status": true,
+        "has_providers_dict": true,
+        "has_hierarchy": true,
+        "config_has_openai": true,
+        "config_has_anthropic": false,
+        "config_has_google": false,
+        "get_provider_status_works": true,
+        "status_is_dict": true,
+        "openai_in_status": true,
+        "openai_has_status": true,
+        "openai_has_priority": true,
+        "openai_has_credentials": true,
+        "anthropic_in_status": true,
+        "anthropic_has_status": true,
+        "anthropic_has_priority": true,
+        "anthropic_has_credentials": true,
+        "google_in_status": true,
+        "google_has_status": true,
+        "google_has_priority": true,
+        "google_has_credentials": true,
+        "hierarchy_is_list": true,
+        "hierarchy_not_empty": true,
+        "openai_in_hierarchy": false
+      },
+      "score": "21/24"
+    },
+    "usage_monitoring": {
+      "status": "PASS",
+      "tests": {
+        "usage_tracker_exists": true,
+        "has_record_usage": true,
+        "has_get_summary": true,
+        "has_get_daily": true,
+        "has_cleanup": true,
+        "has_export": true,
+        "get_usage_summary_works": true,
+        "summary_is_dict": true,
+        "has_period_days": true,
+        "has_total_section": true,
+        "total_has_calls": true,
+        "total_has_cost": true,
+        "total_has_tokens": true,
+        "get_daily_usage_works": true,
+        "daily_is_list": true,
+        "record_usage_works": true
+      },
+      "score": "16/16"
+    },
+    "health_monitoring": {
+      "status": "PASS",
+      "tests": {
+        "health_monitor_exists": true,
+        "has_comprehensive_check": true,
+        "has_get_metrics": true,
+        "comprehensive_health_check_works": true,
+        "health_result_is_dict": true,
+        "has_overall_status": true,
+        "has_services": true,
+        "has_system_info": true,
+        "has_data_status": true,
+        "has_api_status": true,
+        "get_service_metrics_works": true,
+        "metrics_is_dict": true,
+        "metrics_has_timestamp": true,
+        "metrics_has_uptime": true,
+        "metrics_has_usage": true
+      },
+      "score": "15/15"
+    }
+  },
+  "ai_service_url": "http://127.0.0.1:8087"
+}

@@ -1,0 +1,468 @@
+{
+  "timestamp": 1767800019.8393383,
+  "journey_completion": {
+    "successful_steps": 7,
+    "total_steps": 7,
+    "completion_rate": 100.0
+  },
+  "interaction_stats": {
+    "total": 20,
+    "successful": 15,
+    "failed": 0,
+    "success_rate": 75.0
+  },
+  "scenarios": {
+    "App Launch": {
+      "success": 2,
+      "failed": 0,
+      "total": 2
+    },
+    "People Tab": {
+      "success": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "Person Details": {
+      "success": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "Stories Tab": {
+      "success": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "Story Reading": {
+      "success": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "Story Generation": {
+      "success": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "Galleries Tab": {
+      "success": 2,
+      "failed": 0,
+      "total": 2
+    },
+    "Chat System": {
+      "success": 4,
+      "failed": 0,
+      "total": 4
+    },
+    "Places Tab": {
+      "success": 1,
+      "failed": 0,
+      "total": 4
+    },
+    "Error Handling": {
+      "success": 1,
+      "failed": 0,
+      "total": 3
+    }
+  },
+  "critical_failures": [],
+  "detailed_results": [
+    {
+      "scenario": "App Launch",
+      "action": "Load frontend",
+      "result": "SUCCESS",
+      "data": {
+        "status_code": 200
+      },
+      "timestamp": 1767800014.3461533
+    },
+    {
+      "scenario": "App Launch",
+      "action": "Check AI status",
+      "result": "SUCCESS",
+      "data": {
+        "ai_status": "partial",
+        "ai_message": "AI features available via openai",
+        "status_color": "yellow",
+        "available_providers": [
+          "openai"
+        ],
+        "total_providers": 3,
+        "features": {
+          "story_generation": true,
+          "people_intelligence": true,
+          "smart_galleries": true,
+          "semantic_search": true
+        }
+      },
+      "timestamp": 1767800014.3480995
+    },
+    {
+      "scenario": "People Tab",
+      "action": "Load people data",
+      "result": "SUCCESS",
+      "data": {
+        "profiles": [
+          {
+            "id": "person_0",
+            "name": null,
+            "representative_photos": [
+              "/app/MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/1133187813959132.jpg",
+              "/app/MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/1320047858163368.jpg"
+            ],
+            "photo_count": 2,
+            "relationship_strength": 0.2,
+            "privacy_level": "private",
+            "first_seen": "2025-12-16T00:15:20",
+            "last_seen": "2025-12-16T00:15:20",
+            "interaction_timeline": 2
+          },
+          {
+            "id": "person_1",
+            "name": null,
+            "representative_photos": [
+              "/app/MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/2238862209467823.jpg"
+            ],
+            "photo_count": 1,
+            "relationship_strength": 0.1,
+            "privacy_level": "private",
+            "first_seen": "2025-12-16T00:15:20",
+            "last_seen": "2025-12-16T00:15:20",
+            "interaction_timeline": 1
+          },
+          {
+            "id": "person_2",
+            "name": null,
+            "representative_photos": [
+              "/app/MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/865298563816311.jpg"
+            ],
+            "photo_count": 1,
+            "relationship_strength": 0.1,
+            "privacy_level": "private",
+            "first_seen": "2025-12-16T00:15:20",
+            "last_seen": "2025-12-16T00:15:20",
+            "interaction_timeline": 1
+          },
+          {
+            "id": "person_3",
+            "name": null,
+            "representative_photos": [
+              "/app/MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/282567897052613.jpg"
+            ],
+            "photo_count": 1,
+            "relationship_strength": 0.1,
+            "privacy_level": "private",
+            "first_seen": "2025-12-16T00:15:20",
+            "last_seen": "2025-12-16T00:15:20",
+            "interaction_timeline": 1
+          }
+        ],
+        "count": 4
+      },
+      "timestamp": 1767800014.3498688
+    },
+    {
+      "scenario": "Person Details",
+      "action": "View person person_0",
+      "result": "SUCCESS",
+      "data": {
+        "person_data": {
+          "id": "person_0",
+          "name": null,
+          "representative_photos": [
+            "/app/MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/1133187813959132.jpg",
+            "/app/MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/1320047858163368.jpg"
+          ],
+          "photo_count": 2,
+          "relationship_strength": 0.2,
+          "privacy_level": "private",
+          "first_seen": "2025-12-16T00:15:20",
+          "last_seen": "2025-12-16T00:15:20",
+          "interaction_timeline": 2
+        }
+      },
+      "timestamp": 1767800014.3499098
+    },
+    {
+      "scenario": "Stories Tab",
+      "action": "Load stories data",
+      "result": "SUCCESS",
+      "data": {
+        "stories": [
+          {
+            "id": "6b4ea53b98eb",
+            "title": "A Story of Recent Memories",
+            "narrative_mode": "chronological",
+            "chapter_count": 6,
+            "quality_score": 0.9999999999999999,
+            "generated_at": "2026-01-07T15:14:08.241866",
+            "total_media_references": 0
+          },
+          {
+            "id": "1fef920e296c",
+            "title": "A Story of My Recent Memories",
+            "narrative_mode": "chronological",
+            "chapter_count": 6,
+            "quality_score": 0.9999999999999999,
+            "generated_at": "2026-01-07T14:46:53.753524",
+            "total_media_references": 0
+          }
+        ],
+        "count": 2
+      },
+      "timestamp": 1767800014.3522255
+    },
+    {
+      "scenario": "Story Reading",
+      "action": "Read story 'A Story of Recent Memories'",
+      "result": "SUCCESS",
+      "data": {
+        "story_data": {
+          "id": "6b4ea53b98eb",
+          "title": "A Story of Recent Memories",
+          "narrative_mode": "chronological",
+          "chapter_count": 6,
+          "quality_score": 0.9999999999999999,
+          "generated_at": "2026-01-07T15:14:08.241866",
+          "total_media_references": 0
+        }
+      },
+      "timestamp": 1767800014.3522608
+    },
+    {
+      "scenario": "Story Generation",
+      "action": "Generate new story",
+      "result": "SUCCESS",
+      "data": {
+        "story": {
+          "id": "f397c06ec5c6",
+          "title": "Story Generation in Progress",
+          "narrative_mode": "chronological",
+          "chapters": [
+            {
+              "id": "fallback_chapter",
+              "title": "A Story in Progress",
+              "content": "This is a placeholder for your chronological story. The story generation encountered an issue: All AI providers exhausted or unavailable. Your memories and experiences are valuable and deserve to be told. Please try generating the story again.",
+              "media_references": [],
+              "people_mentioned": [],
+              "locations": [],
+              "time_period": [
+                "2025-01-07T15:33:35.170813",
+                "2026-01-07T15:33:35.170827"
+              ],
+              "emotional_tone": "hopeful"
+            }
+          ],
+          "total_media_references": [],
+          "generation_prompt": "Fallback story due to generation error",
+          "quality_score": 0.3,
+          "generated_at": "2026-01-07T15:33:35.170893",
+          "customization_params": {
+            "narrative_mode": "chronological",
+            "theme": "User Test Story",
+            "time_period": [
+              "2025-10-09T15:33:34.353917",
+              "2026-01-07T15:33:34.353924"
+            ],
+            "focus_people": null,
+            "focus_locations": null,
+            "max_chapters": 10,
+            "tone": "chronological"
+          }
+        },
+        "type": "chronological",
+        "theme": "User Test Story",
+        "generated_at": "2026-01-07T15:33:35.171057"
+      },
+      "timestamp": 1767800015.1727986
+    },
+    {
+      "scenario": "Galleries Tab",
+      "action": "Load galleries data",
+      "result": "SUCCESS",
+      "data": {
+        "galleries": [
+          {
+            "name": "Recent Photos",
+            "photos": [
+              {
+                "path": "MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/1133187813959132.jpg",
+                "name": "1133187813959132.jpg"
+              },
+              {
+                "path": "MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/1320047858163368.jpg",
+                "name": "1320047858163368.jpg"
+              },
+              {
+                "path": "MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/2238862209467823.jpg",
+                "name": "2238862209467823.jpg"
+              },
+              {
+                "path": "MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/865298563816311.jpg",
+                "name": "865298563816311.jpg"
+              },
+              {
+                "path": "MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/282567897052613.jpg",
+                "name": "282567897052613.jpg"
+              },
+              {
+                "path": "MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/460878711348217.jpg",
+                "name": "460878711348217.jpg"
+              },
+              {
+                "path": "MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/409759649576568.jpg",
+                "name": "409759649576568.jpg"
+              },
+              {
+                "path": "MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/2193526300735940.jpg",
+                "name": "2193526300735940.jpg"
+              },
+              {
+                "path": "MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/247288040701229.jpg",
+                "name": "247288040701229.jpg"
+              },
+              {
+                "path": "MyData/your_facebook_activity/messages/e2ee_cutover/benjwarkener_10157210657308887/photos/425850521579115.jpg",
+                "name": "425850521579115.jpg"
+              }
+            ],
+            "count": 10
+          }
+        ],
+        "total_photos": 10,
+        "processing_status": {
+          "data_sources": [],
+          "total_photos_processed": 0,
+          "total_files_processed": 0,
+          "data_path": "MyData",
+          "database_path": "MyData/processed_data.db"
+        }
+      },
+      "timestamp": 1767800015.2134695
+    },
+    {
+      "scenario": "Galleries Tab",
+      "action": "Check photo availability",
+      "result": "SUCCESS",
+      "data": {
+        "total_photos": 10
+      },
+      "timestamp": 1767800015.2134893
+    },
+    {
+      "scenario": "Chat System",
+      "action": "Query 1 (chat)",
+      "result": "SUCCESS",
+      "data": {
+        "response": "I received your message: 'Hello, what can you tell me about my data?'. This is a test response from the AI chat system.",
+        "timestamp": "2026-01-07T15:33:35.214401",
+        "status": "success"
+      },
+      "timestamp": 1767800015.2146506
+    },
+    {
+      "scenario": "Chat System",
+      "action": "Query 2 (qa)",
+      "result": "SUCCESS",
+      "data": {
+        "answer": "Based on your query 'How many photos do I have?', here's what I found in your personal data: This is a test response showing that the Q&A system is working.",
+        "query": "How many photos do I have?",
+        "timestamp": "2026-01-07T15:33:36.218972",
+        "confidence": 0.85,
+        "sources": [
+          "sample_data"
+        ]
+      },
+      "timestamp": 1767800016.2205057
+    },
+    {
+      "scenario": "Chat System",
+      "action": "Query 3 (qa)",
+      "result": "SUCCESS",
+      "data": {
+        "answer": "Based on your query 'Tell me about the people in my photos', here's what I found in your personal data: This is a test response showing that the Q&A system is working.",
+        "query": "Tell me about the people in my photos",
+        "timestamp": "2026-01-07T15:33:37.224101",
+        "confidence": 0.85,
+        "sources": [
+          "sample_data"
+        ]
+      },
+      "timestamp": 1767800017.2258024
+    },
+    {
+      "scenario": "Chat System",
+      "action": "Query 4 (chat)",
+      "result": "SUCCESS",
+      "data": {
+        "response": "I received your message: 'Can you help me understand my digital memories?'. This is a test response from the AI chat system.",
+        "timestamp": "2026-01-07T15:33:38.229787",
+        "status": "success"
+      },
+      "timestamp": 1767800018.2315648
+    },
+    {
+      "scenario": "Places Tab",
+      "action": "Check /places endpoint",
+      "result": "NOT_FOUND",
+      "data": {
+        "message": "Endpoint not implemented"
+      },
+      "timestamp": 1767800019.236554
+    },
+    {
+      "scenario": "Places Tab",
+      "action": "Check /locations endpoint",
+      "result": "NOT_FOUND",
+      "data": {
+        "message": "Endpoint not implemented"
+      },
+      "timestamp": 1767800019.240572
+    },
+    {
+      "scenario": "Places Tab",
+      "action": "Check /maps endpoint",
+      "result": "NOT_FOUND",
+      "data": {
+        "message": "Endpoint not implemented"
+      },
+      "timestamp": 1767800019.2443156
+    },
+    {
+      "scenario": "Places Tab",
+      "action": "Check location data in photos",
+      "result": "SUCCESS",
+      "data": {
+        "photos_with_potential_gps": 10
+      },
+      "timestamp": 1767800019.2651064
+    },
+    {
+      "scenario": "Error Handling",
+      "action": "Error scenario /nonexistent",
+      "result": "SUCCESS",
+      "data": {
+        "expected_status": 404
+      },
+      "timestamp": 1767800019.2660558
+    },
+    {
+      "scenario": "Error Handling",
+      "action": "Error scenario /stories/generate",
+      "result": "UNEXPECTED",
+      "data": {
+        "expected": 400,
+        "actual": 200
+      },
+      "timestamp": 1767800019.8335881
+    },
+    {
+      "scenario": "Error Handling",
+      "action": "Error scenario /chat",
+      "result": "UNEXPECTED",
+      "data": {
+        "expected": 400,
+        "actual": 500
+      },
+      "timestamp": 1767800019.8389742
+    }
+  ]
+}

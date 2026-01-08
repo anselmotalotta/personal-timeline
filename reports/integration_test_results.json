@@ -1,0 +1,89 @@
+{
+  "timestamp": "2026-01-07T15:33:57.517442",
+  "overall_status": "PASS",
+  "summary": {
+    "total_categories": 3,
+    "passed_categories": 3,
+    "failed_categories": 0,
+    "success_rate": "100.0%"
+  },
+  "detailed_results": {
+    "frontend_backend_integration": {
+      "status": "PASS",
+      "tests": {
+        "frontend_loads": true,
+        "frontend_has_html": true,
+        "frontend_has_buttons": true,
+        "frontend_api_connection": true,
+        "ai_services_reachable_from_frontend": true,
+        "ai_status_accessible": true,
+        "ai_features_available": true,
+        "story_generation_enabled": true,
+        "people_intelligence_enabled": true,
+        "smart_galleries_enabled": true,
+        "semantic_search_enabled": true,
+        "direct_ai_status": true,
+        "ai_status_valid": true,
+        "has_ai_status_field": true,
+        "has_available_providers": true,
+        "cors_options_works": false,
+        "has_cors_headers": false
+      },
+      "score": "15/17",
+      "frontend_url": "http://127.0.0.1:8088",
+      "ai_service_url": "http://127.0.0.1:8087"
+    },
+    "all_feature_buttons": {
+      "status": "PASS",
+      "tests": {
+        "story_generation_feature_available": true,
+        "story_service_accessible": true,
+        "story_service_has_stats": true,
+        "people_intelligence_feature_available": true,
+        "people_service_accessible": true,
+        "people_service_has_stats": true,
+        "smart_galleries_feature_available": true,
+        "galleries_service_accessible": true,
+        "semantic_search_feature_available": true,
+        "search_indicated_available": true,
+        "providers_endpoint_works": true,
+        "providers_data_valid": true,
+        "has_provider_list": true,
+        "usage_endpoint_works": true,
+        "usage_data_valid": true,
+        "has_usage_summary": true,
+        "health_endpoint_works": true,
+        "health_data_valid": true,
+        "has_overall_status": true
+      },
+      "score": "19/19",
+      "available_features": [
+        "story_generation",
+        "people_intelligence",
+        "smart_galleries",
+        "semantic_search"
+      ]
+    },
+    "data_flow_integration": {
+      "status": "PASS",
+      "tests": {
+        "data_processor_available": true,
+        "processing_status_works": true,
+        "has_process_facebook_data": true,
+        "has_process_google_photos": true,
+        "has_process_apple_health": true,
+        "ai_config_available": true,
+        "has_openai_key": true,
+        "provider_status_works": true,
+        "openai_provider_configured": true,
+        "usage_tracker_available": true,
+        "usage_summary_works": true
+      },
+      "score": "11/11"
+    }
+  },
+  "service_urls": {
+    "ai_services": "http://127.0.0.1:8087",
+    "test_frontend": "http://127.0.0.1:8088"
+  }
+}

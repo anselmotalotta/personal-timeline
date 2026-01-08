@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Feature Gating Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .status-indicator {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        .status-enabled { background: #d1fae5; color: #065f46; }
+        .status-disabled { background: #fee2e2; color: #991b1b; }
+        .feature-demo {
+            border: 2px dashed #e5e7eb;
+            padding: 20px;
+            margin: 12px 0;
+            border-radius: 8px;
+            text-align: center;
+            position: relative;
+        }
+        .feature-disabled {
+            opacity: 0.5;
+            filter: blur(1px);
+        }
+        .disabled-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            border: 2px solid #ef4444;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .api-key-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            margin: 8px 0;
+        }
+        .btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 4px;
+        }
+        .btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #3b82f6;
+            color: #3b82f6;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 AI Feature Gating Test</h1>
+    <p>This page demonstrates how AI features are disabled when API keys are missing.</p>
+
+    <div class="test-section">
+        <h2>🔑 API Key Configuration</h2>
+        <div>
+            <label>
+                <input type="checkbox" id="openai-key" onchange="updateFeatureStatus()"> 
+                OpenAI API Key
+                <span id="openai-status" class="status-indicator status-disabled">DISABLED</span>
+            </label>
+        </div>
+        <div>
+            <label>
+                <input type="checkbox" id="anthropic-key" onchange="updateFeatureStatus()"> 
+                Anthropic API Key
+                <span id="anthropic-status" class="status-indicator status-disabled">DISABLED</span>
+            </label>
+        </div>
+        <div>
+            <label>
+                <input type="checkbox" id="google-key" onchange="updateFeatureStatus()"> 
+                Google AI API Key
+                <span id="google-status" class="status-indicator status-disabled">DISABLED</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔍 AI-Powered Search</h2>
+        <div id="search-feature" class="feature-demo">
+            <div class="feature-content">
+                <h3>Ask questions about your timeline</h3>
+                <input type="text" placeholder="Show me photos from my vacation..." class="api-key-input">
+                <button class="btn">Search with AI</button>
+            </div>
+            <div id="search-overlay" class="disabled-overlay" style="display: none;">
+                <div>🔍 <strong>AI Search Disabled</strong></div>
+                <div style="font-size: 12px; margin-top: 4px;">Add OpenAI, Anthropic, or Google AI key</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📖 Story Generation</h2>
+        <div id="story-feature" class="feature-demo">
+            <div class="feature-content">
+                <h3>Generate narrative stories from your memories</h3>
+                <button class="btn">Generate Chronological Story</button>
+                <button class="btn btn-outline">Generate Thematic Story</button>
+            </div>
+            <div id="story-overlay" class="disabled-overlay" style="display: none;">
+                <div>📖 <strong>Story Generation Disabled</strong></div>
+                <div style="font-size: 12px; margin-top: 4px;">Add OpenAI or Anthropic key</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>👥 People Intelligence</h2>
+        <div id="people-feature" class="feature-demo">
+            <div class="feature-content">
+                <h3>Detect and analyze people in your photos</h3>
+                <button class="btn">Detect People</button>
+                <button class="btn btn-outline">Analyze Relationships</button>
+            </div>
+            <div id="people-overlay" class="disabled-overlay" style="display: none;">
+                <div>👥 <strong>People Intelligence Disabled</strong></div>
+                <div style="font-size: 12px; margin-top: 4px;">Add OpenAI or Google AI key</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🎨 Smart Galleries</h2>
+        <div id="gallery-feature" class="feature-demo">
+            <div class="feature-content">
+                <h3>Create AI-curated photo collections</h3>
+                <button class="btn">Create "Travel Moments" Gallery</button>
+                <button class="btn btn-outline">Create "Creative Shots" Gallery</button>
+            </div>
+            <div id="gallery-overlay" class="disabled-overlay" style="display: none;">
+                <div>🎨 <strong>Smart Galleries Disabled</strong></div>
+                <div style="font-size: 12px; margin-top: 4px;">Add any AI provider key</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📊 System Status</h2>
+        <div id="system-status">
+            <div>Overall Status: <span id="overall-status" class="status-indicator status-disabled">LIMITED MODE</span></div>
+            <div style="margin-top: 12px; font-size: 14px; color: #6b7280;">
+                <div id="status-message">No AI providers configured. Add API keys to enable AI features.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateFeatureStatus() {
+            const openaiEnabled = document.getElementById('openai-key').checked;
+            const anthropicEnabled = document.getElementById('anthropic-key').checked;
+            const googleEnabled = document.getElementById('google-key').checked;
+
+            // Update individual provider status
+            updateProviderStatus('openai', openaiEnabled);
+            updateProviderStatus('anthropic', anthropicEnabled);
+            updateProviderStatus('google', googleEnabled);
+
+            // Determine feature availability
+            const hasAnyProvider = openaiEnabled || anthropicEnabled || googleEnabled;
+            const hasTextProvider = openaiEnabled || anthropicEnabled;
+            const hasVisionProvider = openaiEnabled || googleEnabled;
+
+            // Update feature states
+            updateFeature('search', hasAnyProvider);
+            updateFeature('story', hasTextProvider);
+            updateFeature('people', hasVisionProvider);
+            updateFeature('gallery', hasAnyProvider);
+
+            // Update overall status
+            updateOverallStatus(hasAnyProvider, openaiEnabled, anthropicEnabled, googleEnabled);
+        }
+
+        function updateProviderStatus(provider, enabled) {
+            const statusEl = document.getElementById(`${provider}-status`);
+            if (enabled) {
+                statusEl.textContent = 'ENABLED';
+                statusEl.className = 'status-indicator status-enabled';
+            } else {
+                statusEl.textContent = 'DISABLED';
+                statusEl.className = 'status-indicator status-disabled';
+            }
+        }
+
+        function updateFeature(featureName, enabled) {
+            const featureEl = document.getElementById(`${featureName}-feature`);
+            const overlayEl = document.getElementById(`${featureName}-overlay`);
+            
+            if (enabled) {
+                featureEl.classList.remove('feature-disabled');
+                overlayEl.style.display = 'none';
+            } else {
+                featureEl.classList.add('feature-disabled');
+                overlayEl.style.display = 'block';
+            }
+        }
+
+        function updateOverallStatus(hasAnyProvider, openai, anthropic, google) {
+            const statusEl = document.getElementById('overall-status');
+            const messageEl = document.getElementById('status-message');
+
+            if (!hasAnyProvider) {
+                statusEl.textContent = 'LIMITED MODE';
+                statusEl.className = 'status-indicator status-disabled';
+                messageEl.textContent = 'No AI providers configured. Add API keys to enable AI features.';
+            } else {
+                const enabledProviders = [];
+                if (openai) enabledProviders.push('OpenAI');
+                if (anthropic) enabledProviders.push('Anthropic');
+                if (google) enabledProviders.push('Google AI');
+
+                if (enabledProviders.length === 3) {
+                    statusEl.textContent = 'FULL AI MODE';
+                    statusEl.className = 'status-indicator status-enabled';
+                    messageEl.textContent = 'All AI features available with full provider redundancy.';
+                } else {
+                    statusEl.textContent = 'PARTIAL AI MODE';
+                    statusEl.className = 'status-indicator status-enabled';
+                    messageEl.textContent = `AI features available via: ${enabledProviders.join(', ')}`;
+                }
+            }
+        }
+
+        // Initialize with all features disabled
+        updateFeatureStatus();
+    </script>
+</body>
+</html>
