@@ -23,7 +23,7 @@ import { Timeline } from 'primereact/timeline';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
-import { Chart } from 'primereact/chart';
+import { ProgressBar } from 'primereact/progressbar';
 import { config } from '../Constants';
 
 const PeopleDashboard = ({ onPersonSelect, onCreateStory }) => {
@@ -41,7 +41,7 @@ const PeopleDashboard = ({ onPersonSelect, onCreateStory }) => {
 
   const loadPeople = async () => {
     try {
-      const response = await fetch(`${config.API_URL}/api/people`);
+      const response = await fetch(`${config.API_URL}/people`);
       const data = await response.json();
       setPeople(data.people || []);
     } catch (error) {
@@ -51,19 +51,20 @@ const PeopleDashboard = ({ onPersonSelect, onCreateStory }) => {
 
   const loadPersonDetails = async (personId) => {
     try {
-      const [profileResponse, interactionResponse, evolutionResponse] = await Promise.all([
-        fetch(`${config.API_URL}/api/people/${personId}/profile`),
-        fetch(`${config.API_URL}/api/people/${personId}/interactions`),
-        fetch(`${config.API_URL}/api/people/${personId}/evolution`)
+      const [profileResponse, analysisResponse] = await Promise.all([
+        fetch(`${config.API_URL}/people/profiles/${personId}`),
+        fetch(`${config.API_URL}/people/profiles/${personId}/analysis`)
       ]);
 
       const profile = await profileResponse.json();
-      const interactions = await interactionResponse.json();
-      const evolution = await evolutionResponse.json();
+      const analysis = await analysisResponse.json();
 
       setSelectedPerson(profile);
-      setInteractionData(interactions);
-      setRelationshipEvolution(evolution.phases || []);
+      setInteractionData({
+        timeline: analysis.interaction_timeline || [],
+        peaks: analysis.interaction_peaks || []
+      });
+      setRelationshipEvolution(analysis.relationship_phases || []);
     } catch (error) {
       console.error('Error loading person details:', error);
     }
@@ -71,12 +72,7 @@ const PeopleDashboard = ({ onPersonSelect, onCreateStory }) => {
 
   const generateBestOfUs = async (personId) => {
     try {
-      const response = await fetch(`${config.API_URL}/api/people/${personId}/best-of-us`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
+      const response = await fetch(`${config.API_URL}/people/profiles/${personId}/compilation`);
       
       const compilation = await response.json();
       setBestOfUsCompilation(compilation);
@@ -179,35 +175,61 @@ const PeopleDashboard = ({ onPersonSelect, onCreateStory }) => {
   const renderInteractionChart = () => {
     if (!interactionData.timeline) return null;
     
-    const chartData = {
-      labels: interactionData.timeline.map(point => point.period),
-      datasets: [{
-        label: 'Interactions',
-        data: interactionData.timeline.map(point => point.count),
-        borderColor: '#42A5F5',
-        backgroundColor: 'rgba(66, 165, 245, 0.2)',
-        tension: 0.4
-      }]
-    };
-
-    const chartOptions = {
-      responsive: true,
-      plugins: {
-        legend: {
-          display: false
-        }
-      },
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    };
-
     return (
       <div className="interaction-chart mb-4">
         <h5>Interaction Timeline</h5>
-        <Chart type="line" data={chartData} options={chartOptions} />
+        <Card>
+          <div className="interaction-summary">
+            <div className="grid">
+              <div className="col-6">
+                <div className="text-center">
+                  <h4 className="text-primary">{interactionData.timeline.length}</h4>
+                  <p className="text-sm text-gray-600">Time Periods</p>
+                </div>
+              </div>
+              <div className="col-6">
+                <div className="text-center">
+                  <h4 className="text-primary">
+                    {interactionData.peaks?.length || 0}
+                  </h4>
+                  <p className="text-sm text-gray-600">Peak Periods</p>
+                </div>
+              </div>
+            </div>
+            
+            {interactionData.timeline.length > 0 && (
+              <div className="timeline-bars mt-3">
+                <div className="flex align-items-end gap-1" style={{ height: '100px' }}>
+                  {interactionData.timeline.map((period, index) => {
+                    const maxCount = Math.max(...interactionData.timeline.map(p => p.count || 0));
+                    const height = maxCount > 0 ? ((period.count || 0) / maxCount) * 80 : 10;
+                    
+                    return (
+                      <div
+                        key={index}
+                        className="timeline-bar bg-primary border-round-top"
+                        style={{
+                          height: `${height}px`,
+                          width: `${100 / interactionData.timeline.length}%`,
+                          minHeight: '5px'
+                        }}
+                        title={`${period.period}: ${period.count || 0} interactions`}
+                      />
+                    );
+                  })}
+                </div>
+                <div className="flex justify-content-between mt-2">
+                  <small className="text-gray-600">
+                    {interactionData.timeline[0]?.period}
+                  </small>
+                  <small className="text-gray-600">
+                    {interactionData.timeline[interactionData.timeline.length - 1]?.period}
+                  </small>
+                </div>
+              </div>
+            )}
+          </div>
+        </Card>
       </div>
     );
   };

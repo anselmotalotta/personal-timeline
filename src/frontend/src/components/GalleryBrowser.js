@@ -52,7 +52,7 @@ const GalleryBrowser = ({ onGallerySelect, onCreateStory }) => {
 
   const loadGalleries = async () => {
     try {
-      const response = await fetch(`${config.API_URL}/api/galleries`);
+      const response = await fetch(`${config.API_URL}/galleries`);
       const data = await response.json();
       setGalleries(data.galleries || []);
     } catch (error) {
@@ -62,25 +62,39 @@ const GalleryBrowser = ({ onGallerySelect, onCreateStory }) => {
 
   const loadThematicGalleries = async () => {
     try {
-      const response = await fetch(`${config.API_URL}/api/galleries/thematic`);
+      // Since /galleries/themes doesn't exist, we'll create some default themes
+      // based on the available galleries
+      const response = await fetch(`${config.API_URL}/galleries`);
       const data = await response.json();
-      setThematicGalleries(data.galleries || []);
+      
+      // Create default thematic categories
+      const defaultThemes = [
+        { id: 'recent', name: 'Recent Photos', description: 'Latest photos in your archive' },
+        { id: 'people', name: 'People', description: 'Photos with people' },
+        { id: 'places', name: 'Places', description: 'Photos from different locations' },
+        { id: 'memories', name: 'Memories', description: 'Special moments and memories' }
+      ];
+      
+      setThematicGalleries(defaultThemes);
     } catch (error) {
       console.error('Error loading thematic galleries:', error);
+      // Set default themes even if API call fails
+      setThematicGalleries([
+        { id: 'recent', name: 'Recent Photos', description: 'Latest photos in your archive' }
+      ]);
     }
   };
 
   const createThematicGallery = async (theme) => {
     setIsCreatingGallery(true);
     try {
-      const response = await fetch(`${config.API_URL}/api/galleries/create`, {
+      const response = await fetch(`${config.API_URL}/galleries/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          theme: theme,
-          creation_method: 'thematic'
+          theme: theme
         })
       });
       
@@ -100,14 +114,13 @@ const GalleryBrowser = ({ onGallerySelect, onCreateStory }) => {
     
     setIsCreatingGallery(true);
     try {
-      const response = await fetch(`${config.API_URL}/api/galleries/create`, {
+      const response = await fetch(`${config.API_URL}/galleries/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          prompt: customPrompt,
-          creation_method: 'prompt'
+          prompt: customPrompt
         })
       });
       

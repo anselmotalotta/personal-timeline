@@ -38,12 +38,42 @@ const StoryInterface = ({ memories, onStoryGenerated }) => {
     { label: 'Place-Centered', value: 'place-centered' }
   ];
 
+  // Load existing stories when component mounts
+  useEffect(() => {
+    loadExistingStories();
+  }, []);
+
+  const loadExistingStories = async () => {
+    try {
+      const response = await fetch(`${config.API_URL}/stories`);
+      const data = await response.json();
+      if (data.stories && data.stories.length > 0) {
+        setStories(data.stories);
+        // Automatically load the first story with full details
+        await loadFullStory(data.stories[0].id);
+      }
+    } catch (error) {
+      console.error('Error loading existing stories:', error);
+    }
+  };
+
+  const loadFullStory = async (storyId) => {
+    try {
+      const response = await fetch(`${config.API_URL}/stories/${storyId}`);
+      const fullStory = await response.json();
+      setSelectedStory(fullStory);
+      setCurrentChapter(0);
+    } catch (error) {
+      console.error('Error loading full story:', error);
+    }
+  };
+
   const generateStory = async () => {
     if (!memories || memories.length === 0) return;
     
     setIsGenerating(true);
     try {
-      const response = await fetch(`${config.API_URL}/api/stories/generate`, {
+      const response = await fetch(`${config.API_URL}/stories/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -70,6 +100,8 @@ const StoryInterface = ({ memories, onStoryGenerated }) => {
   };
 
   const playStory = () => {
+    if (!selectedStory?.chapters || selectedStory.chapters.length === 0) return;
+    
     setIsPlaying(true);
     // Auto-advance through chapters
     const interval = setInterval(() => {
@@ -89,7 +121,7 @@ const StoryInterface = ({ memories, onStoryGenerated }) => {
   };
 
   const nextChapter = () => {
-    if (currentChapter < selectedStory.chapters.length - 1) {
+    if (selectedStory?.chapters && currentChapter < selectedStory.chapters.length - 1) {
       setCurrentChapter(prev => prev + 1);
     }
   };
@@ -171,25 +203,30 @@ const StoryInterface = ({ memories, onStoryGenerated }) => {
               <div>
                 <h2>{selectedStory.title}</h2>
                 <p className="text-gray-600">
-                  Chapter {currentChapter + 1} of {selectedStory.chapters.length}
+                  {selectedStory.chapters ? (
+                    `Chapter ${currentChapter + 1} of ${selectedStory.chapters.length}`
+                  ) : (
+                    `${selectedStory.chapter_count || 0} chapters available`
+                  )}
                 </p>
               </div>
               <div className="story-playback-controls">
                 <Button
                   icon="pi pi-step-backward"
                   onClick={previousChapter}
-                  disabled={currentChapter === 0}
+                  disabled={currentChapter === 0 || !selectedStory.chapters}
                   className="p-button-text mr-2"
                 />
                 <Button
                   icon={isPlaying ? "pi pi-pause" : "pi pi-play"}
                   onClick={isPlaying ? pauseStory : playStory}
+                  disabled={!selectedStory.chapters || selectedStory.chapters.length === 0}
                   className="p-button-rounded mr-2"
                 />
                 <Button
                   icon="pi pi-step-forward"
                   onClick={nextChapter}
-                  disabled={currentChapter >= selectedStory.chapters.length - 1}
+                  disabled={!selectedStory.chapters || currentChapter >= selectedStory.chapters.length - 1}
                   className="p-button-text"
                 />
               </div>
@@ -197,23 +234,41 @@ const StoryInterface = ({ memories, onStoryGenerated }) => {
           </Card>
 
           <div className="story-content">
-            {selectedStory.chapters[currentChapter] && 
+            {selectedStory.chapters && selectedStory.chapters[currentChapter] ? (
               renderChapter(selectedStory.chapters[currentChapter])
-            }
+            ) : (
+              <Card className="mb-3 shadow-2">
+                <div className="text-center p-4">
+                  <i className="pi pi-book text-4xl text-gray-400 mb-3"></i>
+                  <h3>Story chapters not loaded</h3>
+                  <p className="text-gray-600 mb-3">
+                    This story has {selectedStory.chapter_count || 0} chapters, but they need to be loaded.
+                  </p>
+                  <Button 
+                    label="Load Full Story" 
+                    icon="pi pi-download"
+                    onClick={() => loadFullStory(selectedStory.id)}
+                    className="p-button-primary"
+                  />
+                </div>
+              </Card>
+            )}
           </div>
 
-          <div className="story-navigation mt-3">
-            <div className="chapter-thumbnails flex gap-2 overflow-x-auto">
-              {selectedStory.chapters.map((chapter, index) => (
-                <Button
-                  key={chapter.id}
-                  label={`${index + 1}`}
-                  onClick={() => setCurrentChapter(index)}
-                  className={`p-button-sm ${index === currentChapter ? 'p-button-primary' : 'p-button-outlined'}`}
-                />
-              ))}
+          {selectedStory.chapters && (
+            <div className="story-navigation mt-3">
+              <div className="chapter-thumbnails flex gap-2 overflow-x-auto">
+                {selectedStory.chapters.map((chapter, index) => (
+                  <Button
+                    key={chapter.id}
+                    label={`${index + 1}`}
+                    onClick={() => setCurrentChapter(index)}
+                    className={`p-button-sm ${index === currentChapter ? 'p-button-primary' : 'p-button-outlined'}`}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
 
@@ -226,7 +281,7 @@ const StoryInterface = ({ memories, onStoryGenerated }) => {
               <div key={story.id} className="col-12 md:col-6 lg:col-4">
                 <Card 
                   title={story.title}
-                  subTitle={`${story.chapters.length} chapters`}
+                  subTitle={`${story.chapters?.length || story.chapter_count || 0} chapters`}
                   className="cursor-pointer hover:shadow-3"
                   onClick={() => {
                     setSelectedStory(story);
@@ -234,7 +289,7 @@ const StoryInterface = ({ memories, onStoryGenerated }) => {
                   }}
                 >
                   <p className="text-sm text-gray-600">
-                    {story.narrative_mode} • {new Date(story.created_at).toLocaleDateString()}
+                    {story.narrative_mode} • {new Date(story.created_at || story.generated_at).toLocaleDateString()}
                   </p>
                 </Card>
               </div>
