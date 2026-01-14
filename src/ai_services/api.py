@@ -1,9 +1,9 @@
 """
 FastAPI endpoints for AI services health and status monitoring
 """
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 import logging
 from datetime import datetime
 
@@ -11,6 +11,7 @@ from .health_monitor import health_monitor
 from .providers import provider_manager
 from .usage_tracker import usage_tracker
 from .config import config
+from .facebook_posts_processor import get_facebook_posts_processor
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +33,7 @@ app.add_middleware(
 @app.get("/health")
 async def get_health_status() -> Dict[str, Any]:
     """
-    Get comprehensive health status of all AI services
+    Get comprehensive health status of all AI services including Facebook Timeline
     
     Returns:
         - overall_status: healthy, degraded, or limited
@@ -41,7 +42,21 @@ async def get_health_status() -> Dict[str, Any]:
         - system_info: System configuration info
     """
     try:
+        # Get base health status
         health_status = await health_monitor.comprehensive_health_check()
+        
+        # Add Facebook Timeline service status
+        try:
+            processor = get_facebook_posts_processor()
+            facebook_status = processor.get_service_status()
+            health_status['services']['facebook_timeline'] = facebook_status
+        except Exception as e:
+            health_status['services']['facebook_timeline'] = {
+                "service": "facebook_posts_timeline",
+                "status": "error",
+                "error": str(e)
+            }
+        
         return health_status
     except Exception as e:
         logger.error(f"Health check failed: {e}")
@@ -802,6 +817,154 @@ async def get_locations() -> Dict[str, Any]:
     Get location data (alias for places)
     """
     return await get_places()
+
+@app.get("/facebook/timeline")
+async def get_facebook_timeline(
+    start_date: Optional[str] = Query(None, description="Start date in YYYY-MM-DD format"),
+    end_date: Optional[str] = Query(None, description="End date in YYYY-MM-DD format")
+) -> Dict[str, Any]:
+    """
+    Get Facebook posts timeline data for chart visualization
+    
+    Returns timeline data grouped by date with post counts and media counts
+    """
+    try:
+        processor = get_facebook_posts_processor()
+        timeline_data = processor.get_timeline_data(start_date, end_date)
+        
+        return {
+            "status": "success",
+            "timeline": [
+                {
+                    "date": item.date,
+                    "post_count": item.post_count,
+                    "has_media_count": item.has_media_count
+                }
+                for item in timeline_data
+            ],
+            "filters": {
+                "start_date": start_date,
+                "end_date": end_date
+            },
+            "count": len(timeline_data)
+        }
+        
+    except Exception as e:
+        logger.error(f"Get Facebook timeline failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Timeline failed: {str(e)}")
+
+@app.get("/facebook/posts")
+async def get_facebook_posts(
+    date: Optional[str] = Query(None, description="Date in YYYY-MM-DD format"),
+    start_date: Optional[str] = Query(None, description="Start date for range query"),
+    end_date: Optional[str] = Query(None, description="End date for range query")
+) -> Dict[str, Any]:
+    """
+    Get Facebook posts for a specific date or date range
+    """
+    try:
+        processor = get_facebook_posts_processor()
+        
+        if date:
+            # Get posts for specific date
+            posts = processor.get_posts_for_date(date)
+            
+            return {
+                "status": "success",
+                "date": date,
+                "post_count": len(posts),
+                "posts": [
+                    {
+                        "id": post.id,
+                        "content": post.content,
+                        "timestamp": post.timestamp.isoformat(),
+                        "post_type": post.post_type,
+                        "media_files": post.media_files,
+                        "reactions": post.reactions,
+                        "comments_count": post.comments_count,
+                        "location": post.location,
+                        "tagged_people": post.tagged_people
+                    }
+                    for post in posts
+                ]
+            }
+        else:
+            # For range queries, return timeline data
+            timeline_data = processor.get_timeline_data(start_date, end_date)
+            return {
+                "status": "success",
+                "timeline": [
+                    {
+                        "date": item.date,
+                        "post_count": item.post_count,
+                        "has_media_count": item.has_media_count
+                    }
+                    for item in timeline_data
+                ],
+                "filters": {
+                    "start_date": start_date,
+                    "end_date": end_date
+                }
+            }
+        
+    except Exception as e:
+        logger.error(f"Get Facebook posts failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Posts query failed: {str(e)}")
+
+@app.post("/facebook/process")
+async def process_facebook_data() -> Dict[str, Any]:
+    """
+    Trigger Facebook data processing from export files
+    
+    Processes Facebook export JSON files and stores posts in database
+    """
+    try:
+        processor = get_facebook_posts_processor()
+        result = processor.process_facebook_data()
+        
+        return {
+            "status": "success" if result.success else "error",
+            "processing_result": {
+                "success": result.success,
+                "total_posts": result.total_posts,
+                "processed_posts": result.processed_posts,
+                "stored_posts": result.stored_posts,
+                "skipped_posts": result.skipped_posts,
+                "errors": result.errors
+            },
+            "timestamp": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        logger.error(f"Process Facebook data failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Processing failed: {str(e)}")
+
+@app.get("/facebook/stats")
+async def get_facebook_stats() -> Dict[str, Any]:
+    """
+    Get Facebook posting statistics and analytics
+    """
+    try:
+        processor = get_facebook_posts_processor()
+        stats = processor.get_timeline_stats()
+        service_status = processor.get_service_status()
+        
+        return {
+            "status": "success",
+            "statistics": {
+                "date": stats.date,
+                "post_count": stats.post_count,
+                "media_count": stats.media_count,
+                "reaction_count": stats.reaction_count,
+                "post_types": stats.post_types
+            },
+            "service_status": service_status,
+            "timestamp": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        logger.error(f"Get Facebook stats failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Stats failed: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn

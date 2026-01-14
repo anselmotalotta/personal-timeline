@@ -38,6 +38,7 @@ import EnhancedMapComponent from './components/EnhancedMapComponent';
 import AIStatusBadge from './components/AIStatusBadge';
 import DisabledFeature from './components/DisabledFeature';
 import useAIStatus from './hooks/useAIStatus';
+import FacebookTimeline from './facebook-timeline/FacebookTimeline';
 
 // Legacy components for fallback
 import GoogleMapComponent from './map/GoogleMapComponent';
@@ -77,8 +78,28 @@ function EnhancedApp() {
   const [selectedGallery, setSelectedGallery] = useState(null);
   const [selectedPerson, setSelectedPerson] = useState(null);
   
+  // Enhanced state for Facebook Timeline integration
+  const [facebookStats, setFacebookStats] = useState(null);
+  
   // Toast for notifications
   const toast = useRef(null);
+
+  // Load Facebook Timeline stats
+  useEffect(() => {
+    const loadFacebookStats = async () => {
+      try {
+        const response = await fetch(`${config.API_URL}/facebook/stats`);
+        if (response.ok) {
+          const data = await response.json();
+          setFacebookStats(data.statistics);
+        }
+      } catch (error) {
+        console.warn('Could not load Facebook stats:', error);
+      }
+    };
+    
+    loadFacebookStats();
+  }, []);
 
   /**
    * Initialize AI services on startup
@@ -284,6 +305,7 @@ function EnhancedApp() {
           '• "galleries" - Browse intelligent galleries\n' +
           '• "people" - Explore people in your life\n' +
           '• "map" - View narrative-enhanced map\n' +
+          '• "facebook" - View Facebook posts timeline\n' +
           '• "clear" - Clear terminal\n'
         );
         break;
@@ -302,6 +324,10 @@ function EnhancedApp() {
       case 'map':
         setActiveView('map');
         TerminalService.emit('response', 'Switched to narrative map view');
+        break;
+      case 'facebook':
+        setActiveView('facebook');
+        TerminalService.emit('response', 'Switched to Facebook posts timeline');
         break;
       default:
         TerminalService.emit('response', 'Processing your query...');
@@ -555,6 +581,13 @@ function EnhancedApp() {
               className={activeView === 'map' ? 'p-button-primary' : 'p-button-outlined'}
             />
             
+            <Button
+              label="Facebook Timeline"
+              icon="pi pi-chart-bar"
+              onClick={() => setActiveView('facebook')}
+              className={activeView === 'facebook' ? 'p-button-primary' : 'p-button-outlined'}
+            />
+            
             {aiStatus.hasSemanticSearch ? (
               <Button
                 label="Q&A"
@@ -576,8 +609,10 @@ function EnhancedApp() {
         }
         end={
           <div className="memory-stats">
-            <Badge value={memories.length} className="mr-2" />
-            <span className="text-sm text-gray-600">memories loaded</span>
+            <Badge value={facebookStats?.total_posts || memories.length} className="mr-2" />
+            <span className="text-sm text-gray-600">
+              {facebookStats?.total_posts ? 'Facebook posts' : 'memories loaded'}
+            </span>
           </div>
         }
         className="mb-4"
@@ -646,8 +681,10 @@ function EnhancedApp() {
                   <div className="insights-grid">
                     <Card className="text-center mb-2">
                       <i className="pi pi-calendar text-2xl text-primary mb-2"></i>
-                      <h5>{memories.length}</h5>
-                      <p className="text-sm text-gray-600">Total Memories</p>
+                      <h5>{facebookStats?.total_posts || memories.length}</h5>
+                      <p className="text-sm text-gray-600">
+                        {facebookStats?.total_posts ? 'Facebook Posts' : 'Total Memories'}
+                      </p>
                     </Card>
                     
                     <Card className="text-center mb-2">
@@ -789,6 +826,17 @@ function EnhancedApp() {
               </div>
             </DisabledFeature>
           )
+        )}
+
+        {activeView === 'facebook' && (
+          <div className="facebook-timeline-view">
+            <Card title="Facebook Posts Timeline" className="mb-3">
+              <p className="text-gray-600 mb-3">
+                Visualize your Facebook posting activity over time with an interactive timeline chart
+              </p>
+              <FacebookTimeline />
+            </Card>
+          </div>
         )}
       </div>
 

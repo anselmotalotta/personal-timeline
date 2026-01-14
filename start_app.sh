@@ -78,6 +78,72 @@ echo ""
 echo "🔍 Checking service status..."
 docker compose ps
 
+# Function to check if a service is healthy
+check_service_health() {
+    local service_name=$1
+    local health_url=$2
+    local max_attempts=10
+    local attempt=1
+    
+    echo "🔍 Checking $service_name health..."
+    
+    while [ $attempt -le $max_attempts ]; do
+        if curl -s -f "$health_url" > /dev/null 2>&1; then
+            echo "✅ $service_name is healthy"
+            return 0
+        else
+            echo "⏳ $service_name not ready yet (attempt $attempt/$max_attempts)..."
+            sleep 3
+            ((attempt++))
+        fi
+    done
+    
+    echo "❌ $service_name failed to start properly"
+    echo "   📋 Checking logs for $service_name:"
+    docker compose logs --tail=20 $service_name
+    return 1
+}
+
+# Check critical services
+echo ""
+echo "🏥 Performing health checks..."
+
+# Check AI Services
+if ! check_service_health "AI Services" "http://localhost:8086/health"; then
+    echo ""
+    echo "⚠️  AI Services failed to start. This may affect:"
+    echo "   • Facebook Timeline functionality"
+    echo "   • AI-powered features"
+    echo "   • Story generation"
+    echo ""
+    echo "💡 Common fixes:"
+    echo "   1. Check logs: docker compose logs ai-services"
+    echo "   2. Restart: docker compose restart ai-services"
+    echo "   3. Rebuild: docker compose up --build ai-services"
+    echo ""
+    ai_services_healthy=false
+else
+    ai_services_healthy=true
+fi
+
+# Check Backend
+if ! check_service_health "Backend" "http://localhost:8000"; then
+    echo "❌ Backend service is not responding"
+    echo "   📋 Checking logs for backend:"
+    docker compose logs --tail=20 backend
+    backend_healthy=false
+else
+    backend_healthy=true
+fi
+
+# Check Frontend
+if ! check_service_health "Frontend" "http://localhost:52692"; then
+    echo "❌ Frontend service is not responding"
+    frontend_healthy=false
+else
+    frontend_healthy=true
+fi
+
 echo ""
 echo "🌐 Application URLs:"
 echo "   📱 Main App:      http://localhost:52692"
@@ -93,11 +159,28 @@ echo "   🛑 Stop services: docker compose down"
 echo "   🔄 Restart:       docker compose restart"
 
 echo ""
-if [ -f ".env" ] && [ "$api_keys_found" = true ]; then
-    echo "🎉 Application ready with AI features!"
+
+# Determine overall status
+if [ "$ai_services_healthy" = true ] && [ "$backend_healthy" = true ] && [ "$frontend_healthy" = true ]; then
+    if [ -f ".env" ] && [ "$api_keys_found" = true ]; then
+        echo "🎉 All services are healthy! Application ready with AI features!"
+    else
+        echo "🎉 All services are healthy! Application ready (limited mode - add API keys for AI features)"
+    fi
+    echo ""
+    echo "   ✅ Visit http://localhost:52692 to get started"
+    echo "   ✅ Facebook Timeline available in the 'Facebook Timeline' tab"
+elif [ "$frontend_healthy" = true ] && [ "$backend_healthy" = true ]; then
+    echo "⚠️  Application partially ready (AI features may be limited)"
+    echo ""
+    echo "   ✅ Visit http://localhost:52692 to get started"
+    echo "   ⚠️  Some AI features may not work properly"
 else
-    echo "🎉 Application ready (limited mode - add API keys for AI features)"
+    echo "❌ Application startup incomplete - some services failed"
+    echo ""
+    echo "   🔧 Try: docker compose down && ./start_app.sh"
+    echo "   📋 Check logs: docker compose logs -f"
 fi
+
 echo ""
-echo "   Visit http://localhost:52692 to get started"
 echo "   The status badge will show AI feature availability"

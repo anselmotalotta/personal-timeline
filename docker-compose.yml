@@ -6,8 +6,11 @@ services:
     ports:
       - "52692:3000"
     volumes:
+      # Mount source code for hot reloading
+      - ./src/frontend/src:/app/src
+      - ./src/frontend/public:/app/public
       # Only mount data directory, no source code mounting to avoid module conflicts
-      - ../MyData:/app/MyData
+      - ${DATA_PATH:-/home/anselmo/workspace/FacebookPostDownloader/MyData}:/app/MyData
     environment:
       - REACT_APP_BACKEND_URL=http://localhost:8000
       - REACT_APP_QA_URL=http://localhost:8086
@@ -16,6 +19,8 @@ services:
       - BROWSER=none
       - WDS_SOCKET_PORT=52692
       - PORT=3000
+      - FAST_REFRESH=true
+      - CHOKIDAR_USEPOLLING=true
     depends_on:
       - backend
       - qa
@@ -28,7 +33,7 @@ services:
     ports:
       - "57485:8085"
     volumes:
-      - ../MyData:/app/MyData
+      - ${DATA_PATH:-/home/anselmo/workspace/FacebookPostDownloader/MyData}:/app/MyData
       - ./src/qa:/app/src/qa
     environment:
       - APP_DATA_DIR=/app/MyData/app_data
@@ -52,7 +57,7 @@ services:
     ports:
       - "8086:8086"
     volumes:
-      - ../MyData:/app/MyData
+      - ${DATA_PATH:-/home/anselmo/workspace/FacebookPostDownloader/MyData}:/app/MyData
       - ./src:/app/src
       - ai-models:/app/models
     environment:
@@ -93,7 +98,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ../MyData:/app/MyData
+      - ${DATA_PATH:-/home/anselmo/workspace/FacebookPostDownloader/MyData}:/app/MyData
       - ./src:/app/src
     environment:
       - APP_DATA_DIR=/app/MyData/app_data

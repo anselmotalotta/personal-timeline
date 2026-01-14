@@ -38,6 +38,7 @@ import { Paginator } from 'primereact/paginator';
 import AIStatusBadge from './components/AIStatusBadge';
 import DisabledFeature from './components/DisabledFeature';
 import useAIStatus from './hooks/useAIStatus';
+import FacebookTimeline from './facebook-timeline/FacebookTimeline';
 
 import HeatMap from '@uiw/react-heat-map';
 import GoogleMapComponent from './map/GoogleMapComponent';
@@ -774,6 +775,12 @@ function App() {
       <Divider className='my-3'/>
 
       <h2 className="">Query your personal timeline</h2>
+      
+      {/* TEST: Facebook Timeline Section */}
+      <div style={{ border: '2px solid red', padding: '20px', margin: '20px 0' }}>
+        <h3>🔴 TEST: Facebook Timeline</h3>
+        <FacebookTimeline />
+      </div>
       {/* QA dialog box */}
       <div class="grid">
       <div class="col-fixed mr-6" style={{width: '800px'}}>
@@ -851,6 +858,11 @@ function App() {
           <SyntaxHighlighter language="javascript" style={coy}>
             {JSON.stringify(worldState, null, 2)}
           </SyntaxHighlighter>
+        </TabPanel>
+
+        {/* Facebook Posts Timeline */}
+        <TabPanel header="Facebook Timeline" style={{ maxWidth: '800px' }}>
+          <FacebookTimeline />
         </TabPanel>
 
       </TabView>
@@ -934,6 +946,20 @@ function App() {
               tooltipOptions={{ position: 'bottom' }}
             />
           )}
+          
+          <Button 
+            label="Facebook Timeline" 
+            icon="pi pi-chart-bar"
+            className="p-button-outlined p-button-info"
+            onClick={() => {
+              setActiveIndex(4); // Facebook Timeline is at index 4 in TabView
+              toast.current.show({ 
+                severity: 'info', 
+                summary: 'Facebook Timeline', 
+                detail: 'Switched to Facebook Timeline view!' 
+              });
+            }}
+          />
         </div>
       </div>
 
