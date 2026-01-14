@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Real Browser Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .loading { background-color: #fff3cd; color: #856404; }
+    </style>
+</head>
+<body>
+    <h1>🎯 Real Browser API Test</h1>
+    <div id="results">
+        <div class="loading">⏳ Testing APIs...</div>
+    </div>
+    
+    <script>
+        const results = document.getElementById('results');
+        results.innerHTML = '';
+        
+        // This simulates what the React app would do
+        const API_URL = 'http://localhost:8086';  // What browser can reach
+        
+        console.log('🚀 Starting real browser test...');
+        console.log('🔧 API_URL:', API_URL);
+        
+        // Test 1: Status
+        fetch(API_URL + '/status')
+            .then(response => response.json())
+            .then(data => {
+                console.log('✅ Status:', data);
+                results.innerHTML += `
+                    <div class="success">
+                        ✅ AI Status: ${data.ai_status} - ${data.ai_message}
+                    </div>
+                `;
+            })
+            .catch(error => {
+                console.error('❌ Status error:', error);
+                results.innerHTML += `
+                    <div class="error">
+                        ❌ AI Status failed: ${error.message}
+                    </div>
+                `;
+            });
+        
+        // Test 2: People
+        fetch(API_URL + '/people/profiles')
+            .then(response => response.json())
+            .then(data => {
+                console.log('✅ People:', data);
+                results.innerHTML += `
+                    <div class="success">
+                        ✅ People Dashboard: ${data.count} people detected
+                    </div>
+                `;
+            })
+            .catch(error => {
+                console.error('❌ People error:', error);
+                results.innerHTML += `
+                    <div class="error">
+                        ❌ People Dashboard failed: ${error.message}
+                    </div>
+                `;
+            });
+        
+        // Test 3: Stories
+        fetch(API_URL + '/stories')
+            .then(response => response.json())
+            .then(data => {
+                console.log('✅ Stories:', data);
+                results.innerHTML += `
+                    <div class="success">
+                        ✅ Stories: ${data.count} stories available
+                    </div>
+                `;
+            })
+            .catch(error => {
+                console.error('❌ Stories error:', error);
+                results.innerHTML += `
+                    <div class="error">
+                        ❌ Stories failed: ${error.message}
+                    </div>
+                `;
+            });
+        
+        // Test 4: Chat
+        fetch(API_URL + '/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: 'Hello from browser test!' })
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('✅ Chat:', data);
+                results.innerHTML += `
+                    <div class="success">
+                        ✅ Chat works: Got response
+                    </div>
+                `;
+            })
+            .catch(error => {
+                console.error('❌ Chat error:', error);
+                results.innerHTML += `
+                    <div class="error">
+                        ❌ Chat failed: ${error.message}
+                    </div>
+                `;
+            });
+    </script>
+</body>
+</html>
+    

@@ -1,0 +1,25 @@
+{
+  "timestamp": 1767844954.8420951,
+  "status": "NOT_READY",
+  "success_rate": 66.66666666666666,
+  "test_results": {
+    "user_view": {
+      "success": true,
+      "issues": []
+    },
+    "consistency": {
+      "success": true,
+      "issues": []
+    },
+    "functionality": {
+      "success": false,
+      "issues": [
+        "Story generation returned error/failure: {'story': {'id': '899b3dbede2f', 'title': 'Story Generation in Progress', 'narrative_mode': 'chronological', 'chapter_count': 1, 'quality_score': 0.3, 'generated_at': '2026-01-08T04:02:34.673969', 'total_media_references': 0, 'chapters': [{'id': 'fallback_chapter', 'title': 'A Story in Progress', 'content': 'This is a placeholder for your chronological story. The story generation encountered an issue: All AI providers exhausted or unavailable. Your memories and experiences are valuable and deserve to be told. Please try generating the story again.', 'emotional_tone': 'hopeful'}]}, 'type': 'chronological', 'theme': 'test story', 'generated_at': '2026-01-08T04:02:34.674135'}"
+      ]
+    }
+  },
+  "all_issues": [
+    "Story generation returned error/failure: {'story': {'id': '899b3dbede2f', 'title': 'Story Generation in Progress', 'narrative_mode': 'chronological', 'chapter_count': 1, 'quality_score': 0.3, 'generated_at': '2026-01-08T04:02:34.673969', 'total_media_references': 0, 'chapters': [{'id': 'fallback_chapter', 'title': 'A Story in Progress', 'content': 'This is a placeholder for your chronological story. The story generation encountered an issue: All AI providers exhausted or unavailable. Your memories and experiences are valuable and deserve to be told. Please try generating the story again.', 'emotional_tone': 'hopeful'}]}, 'type': 'chronological', 'theme': 'test story', 'generated_at': '2026-01-08T04:02:34.674135'}"
+  ],
+  "user_ready": false
+}

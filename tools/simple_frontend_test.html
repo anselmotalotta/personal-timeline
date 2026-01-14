@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Frontend Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 4px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        iframe { width: 100%; height: 600px; border: 1px solid #ddd; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>🎯 Simple Frontend Test</h1>
+    
+    <div id="test-results">
+        <div class="test-result info">🔄 Loading frontend...</div>
+    </div>
+    
+    <h2>Live Frontend View:</h2>
+    <iframe src="http://localhost:52692" id="frontend-iframe"></iframe>
+    
+    <div id="instructions">
+        <h3>📋 What to Look For:</h3>
+        <ul>
+            <li><strong>Stories Tab:</strong> Should show 16 stories with titles and chapters</li>
+            <li><strong>People Tab:</strong> Should show 4 people with photos</li>
+            <li><strong>Galleries Tab:</strong> Should show 10 photos</li>
+            <li><strong>Chat/Q&A:</strong> Should give data-driven responses about your archive</li>
+            <li><strong>AI Status Badge:</strong> Should show "partial" or "working" status</li>
+        </ul>
+        
+        <h3>🚨 If You See Issues:</h3>
+        <ul>
+            <li><strong>Empty tabs:</strong> Frontend components may not be loading data correctly</li>
+            <li><strong>Loading states:</strong> API calls may be failing</li>
+            <li><strong>Error messages:</strong> Check browser console for JavaScript errors</li>
+            <li><strong>Blank page:</strong> React app may not be starting</li>
+        </ul>
+    </div>
+
+    <script>
+        // Test API connectivity from browser
+        async function testFromBrowser() {
+            const resultsDiv = document.getElementById('test-results');
+            
+            try {
+                // Test if we can reach the API from the browser (CORS test)
+                const response = await fetch('http://localhost:8086/status');
+                const data = await response.json();
+                
+                if (data.ai_status) {
+                    resultsDiv.innerHTML = `
+                        <div class="test-result success">✅ API accessible from browser</div>
+                        <div class="test-result info">🤖 AI Status: ${data.ai_status}</div>
+                        <div class="test-result info">📊 Available Features: ${Object.keys(data.features).filter(k => data.features[k]).length}/4</div>
+                    `;
+                } else {
+                    resultsDiv.innerHTML = '<div class="test-result error">❌ API response invalid</div>';
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="test-result error">❌ Cannot reach API from browser: ${error.message}</div>`;
+            }
+        }
+        
+        // Run test after page loads
+        setTimeout(testFromBrowser, 1000);
+    </script>
+</body>
+</html>

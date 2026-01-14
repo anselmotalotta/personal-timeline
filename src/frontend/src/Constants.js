@@ -16,11 +16,13 @@
 
 
 const prod = {
-    API_URL: process.env.REACT_APP_QA_URL || 'http://localhost:8085'
+    API_URL: process.env.REACT_APP_API_URL || 'http://localhost:8086',
+    QA_URL: process.env.REACT_APP_QA_URL || 'http://localhost:8086'
 };
 
 const dev = {
-    API_URL: process.env.REACT_APP_QA_URL || 'http://localhost:8085'
+    API_URL: process.env.REACT_APP_API_URL || 'http://localhost:8086',
+    QA_URL: process.env.REACT_APP_QA_URL || 'http://localhost:8086'
 };
 
 export const config = process.env.NODE_ENV === 'development' ? dev : prod;

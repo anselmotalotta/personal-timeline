@@ -1,0 +1,85 @@
+{
+  "timestamp": "2026-01-07T16:07:21.524537",
+  "total_features": 5,
+  "working_features": 5,
+  "broken_features": 0,
+  "functionality_rate": "100.0%",
+  "overall_status": "WORKING",
+  "detailed_results": {
+    "story_generation_button": {
+      "status": "PASS",
+      "tests": {
+        "story_feature_enabled": true,
+        "endpoint_/stories_exists": true,
+        "story_endpoint_exists": true,
+        "can_get_stories": true,
+        "stories_count": 4,
+        "can_generate_chronological": true,
+        "story_has_content": false
+      },
+      "score": "5/6",
+      "actual_output": "Story generation attempted"
+    },
+    "galleries_functionality": {
+      "status": "PASS",
+      "tests": {
+        "endpoint_/galleries_exists": true,
+        "data_path_exists": true,
+        "photos_found": 5,
+        "has_photos_to_process": true,
+        "smart_galleries_enabled": true
+      },
+      "score": "4/4",
+      "actual_output": "Found 5 photos"
+    },
+    "people_detection": {
+      "status": "PASS",
+      "tests": {
+        "can_get_people": true,
+        "people_count": 3,
+        "has_people_data": true,
+        "service_status_works": true,
+        "total_people_detected": 3,
+        "has_detected_people": true,
+        "endpoint_/people_exists": true,
+        "endpoint_/people_has_data": true,
+        "photos_for_face_detection": 5,
+        "has_photos_for_faces": true
+      },
+      "score": "7/7",
+      "actual_output": "Found 3 people"
+    },
+    "places_and_maps": {
+      "status": "PASS",
+      "tests": {
+        "frontend_loads": true,
+        "has_map_references": false,
+        "has_google_maps": false,
+        "has_leaflet": false,
+        "location_files_found": 2,
+        "has_location_data": true,
+        "photos_with_gps": 5,
+        "has_gps_data": true
+      },
+      "score": "3/6",
+      "actual_output": "GPS data in 5 photos"
+    },
+    "chat_system": {
+      "status": "PASS",
+      "tests": {
+        "endpoint_/chat_exists": true,
+        "endpoint_/chat_responds": true,
+        "endpoint_/chat_has_response": true,
+        "endpoint_/qa_exists": true,
+        "endpoint_/qa_responds": true,
+        "endpoint_/qa_has_response": true,
+        "ai_providers_available": true,
+        "semantic_search_enabled": true,
+        "data_files_for_chat": 9,
+        "has_data_to_chat_about": true
+      },
+      "score": "9/9",
+      "actual_output": "Chat responds"
+    }
+  }
+}

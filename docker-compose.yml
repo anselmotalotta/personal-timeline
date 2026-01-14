@@ -6,16 +6,25 @@ services:
     ports:
       - "52692:3000"
     volumes:
+      # Mount source code for hot reloading
+      - ./src/frontend/src:/app/src
+      - ./src/frontend/public:/app/public
       # Only mount data directory, no source code mounting to avoid module conflicts
-      - ../MyData:/app/MyData
+      - ${DATA_PATH:-/home/anselmo/workspace/FacebookPostDownloader/MyData}:/app/MyData
     environment:
-      - REACT_APP_BACKEND_URL=http://backend:8000
-      - REACT_APP_QA_URL=http://qa:8085
+      - REACT_APP_BACKEND_URL=http://localhost:8000
+      - REACT_APP_QA_URL=http://localhost:8086
+      - REACT_APP_API_URL=http://localhost:8086
+      - REACT_APP_AI_SERVICES_URL=http://localhost:8086
       - BROWSER=none
       - WDS_SOCKET_PORT=52692
+      - PORT=3000
+      - FAST_REFRESH=true
+      - CHOKIDAR_USEPOLLING=true
     depends_on:
       - backend
       - qa
+      - ai-services
 
   qa:
     build:
@@ -24,14 +33,63 @@ services:
     ports:
       - "57485:8085"
     volumes:
-      - ../MyData:/app/MyData
+      - ${DATA_PATH:-/home/anselmo/workspace/FacebookPostDownloader/MyData}:/app/MyData
       - ./src/qa:/app/src/qa
     environment:
       - APP_DATA_DIR=/app/MyData/app_data
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
-    command: python -m src.qa.server
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
+      - AI_SERVICES_URL=http://ai-services:8086
+      - ENHANCED_QA_ENABLED=${ENHANCED_QA_ENABLED:-true}
+      - AI_PROVIDER_HIERARCHY=${AI_PROVIDER_HIERARCHY:-openai,anthropic,google}
+      - MAX_CONCURRENT_API_CALLS=${MAX_CONCURRENT_API_CALLS:-5}
+      - API_TIMEOUT_SECONDS=${API_TIMEOUT_SECONDS:-30}
+    command: python -m src.qa.enhanced_qa_server
     depends_on:
       - backend
+      - ai-services
+
+  ai-services:
+    build:
+      context: .
+      dockerfile: Dockerfile.ai-services
+    ports:
+      - "8086:8086"
+    volumes:
+      - ${DATA_PATH:-/home/anselmo/workspace/FacebookPostDownloader/MyData}:/app/MyData
+      - ./src:/app/src
+      - ai-models:/app/models
+    environment:
+      - APP_DATA_DIR=/app/MyData/app_data
+      - AI_MODEL_DIR=/app/models
+      - DATA_PATH=/app/MyData
+      # AI Provider Configuration
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
+      - AI_PROVIDER_HIERARCHY=${AI_PROVIDER_HIERARCHY:-openai,anthropic,google}
+      - DEFAULT_MODEL_OPENAI=${DEFAULT_MODEL_OPENAI:-gpt-4}
+      - DEFAULT_MODEL_ANTHROPIC=${DEFAULT_MODEL_ANTHROPIC:-claude-3-sonnet-20240229}
+      - DEFAULT_MODEL_GOOGLE=${DEFAULT_MODEL_GOOGLE:-gemini-pro}
+      # Performance Settings
+      - MAX_CONCURRENT_API_CALLS=${MAX_CONCURRENT_API_CALLS:-5}
+      - API_TIMEOUT_SECONDS=${API_TIMEOUT_SECONDS:-30}
+      - LOCAL_CACHE_TTL_MINUTES=${LOCAL_CACHE_TTL_MINUTES:-5}
+      # Privacy Settings
+      - ENABLE_USAGE_ANALYTICS=${ENABLE_USAGE_ANALYTICS:-true}
+      - ENABLE_ERROR_REPORTING=${ENABLE_ERROR_REPORTING:-false}
+      - KEEP_API_LOGS_DAYS=${KEEP_API_LOGS_DAYS:-7}
+      - DEBUG_LOGGING=${DEBUG_LOGGING:-false}
+      # Legacy model settings (for backward compatibility)
+      - LOCAL_LLM_MODEL=${LOCAL_LLM_MODEL:-microsoft/DialoGPT-medium}
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-sentence-transformers/all-MiniLM-L6-v2}
+      - TTS_MODEL=${TTS_MODEL:-espnet/kan-bayashi_ljspeech_vits}
+      - MULTIMODAL_MODEL=${MULTIMODAL_MODEL:-openai/clip-vit-base-patch32}
+      - AI_PROCESSING_BATCH_SIZE=${AI_PROCESSING_BATCH_SIZE:-32}
+      - AI_MAX_MEMORY_GB=${AI_MAX_MEMORY_GB:-4}
+      - ENABLE_GPU=${ENABLE_GPU:-false}
+    command: python -m src.ai_services.api
 
   backend:
     build:
@@ -40,13 +98,64 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ../MyData:/app/MyData
+      - ${DATA_PATH:-/home/anselmo/workspace/FacebookPostDownloader/MyData}:/app/MyData
       - ./src:/app/src
     environment:
       - APP_DATA_DIR=/app/MyData/app_data
+      - DATA_PATH=/app/MyData
       - ingest_new_data=True
       - incremental_geo_enrich=False
       - incremental_image_enrich=False
       - incremental_export=True
       - enriched_data_to_json=True
+      - AI_SERVICES_URL=http://ai-services:8086
+      - ENABLE_AI_ENHANCEMENT=${ENABLE_AI_ENHANCEMENT:-true}
+      # AI Provider Configuration for backend
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
     command: bash src/ingest/ingestion_startup.sh
+    depends_on:
+      - ai-services
+
+  # Vector Database for embeddings and semantic search
+  vector-db:
+    image: pgvector/pgvector:pg15
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_DB=vector_store
+      - POSTGRES_USER=vector_user
+      - POSTGRES_PASSWORD=secure_vector_password
+    volumes:
+      - vector_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vector_user -d vector_store"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Main Database for application data
+  database:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=personal_archive_local
+      - POSTGRES_USER=archive_user
+      - POSTGRES_PASSWORD=secure_local_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U archive_user -d personal_archive_local"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  ai-models:
+    driver: local
+  postgres_data:
+    driver: local
+  vector_data:
+    driver: local

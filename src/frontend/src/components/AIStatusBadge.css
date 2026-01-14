@@ -1,0 +1,231 @@
+.ai-status-badge {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  min-width: 200px;
+  max-width: 400px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.ai-status-badge.green {
+  border-left: 4px solid #10b981;
+}
+
+.ai-status-badge.yellow {
+  border-left: 4px solid #f59e0b;
+}
+
+.ai-status-badge.red {
+  border-left: 4px solid #ef4444;
+}
+
+.ai-status-badge.gray {
+  border-left: 4px solid #6b7280;
+}
+
+.status-header {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.status-header:hover {
+  background-color: #f9fafb;
+}
+
+.status-icon {
+  font-size: 16px;
+}
+
+.status-text {
+  font-weight: 600;
+  font-size: 14px;
+  flex: 1;
+}
+
+.toggle-icon {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.status-details {
+  padding: 16px;
+  border-top: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+}
+
+.status-message {
+  font-size: 13px;
+  color: #374151;
+  margin-bottom: 12px;
+}
+
+.providers-section,
+.features-section {
+  margin-bottom: 16px;
+}
+
+.providers-section strong,
+.features-section strong {
+  font-size: 12px;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.provider-list {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.provider-tag {
+  background-color: #10b981;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.feature {
+  font-size: 12px;
+  padding: 4px 0;
+}
+
+.feature.enabled {
+  color: #059669;
+}
+
+.feature.disabled {
+  color: #9ca3af;
+}
+
+.setup-instructions {
+  background-color: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 6px;
+  padding: 12px;
+  margin: 12px 0;
+}
+
+.setup-instructions h4 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: #92400e;
+}
+
+.setup-instructions p {
+  margin: 4px 0;
+  font-size: 12px;
+  color: #78350f;
+}
+
+.setup-instructions pre {
+  background-color: #1f2937;
+  color: #f9fafb;
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  overflow-x: auto;
+  margin: 8px 0;
+}
+
+.setup-instructions code {
+  background-color: #374151;
+  color: #f9fafb;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 11px;
+}
+
+.api-links {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.api-links a {
+  background-color: #3b82f6;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.api-links a:hover {
+  background-color: #2563eb;
+}
+
+.last-check {
+  font-size: 11px;
+  color: #9ca3af;
+  margin-top: 12px;
+  text-align: center;
+}
+
+.status-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  justify-content: center;
+}
+
+.refresh-btn,
+.health-link {
+  background-color: #6b7280;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.refresh-btn:hover,
+.health-link:hover {
+  background-color: #4b5563;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .ai-status-badge {
+    position: relative;
+    top: auto;
+    right: auto;
+    margin: 10px;
+    width: calc(100% - 20px);
+  }
+  
+  .setup-instructions pre {
+    font-size: 10px;
+  }
+  
+  .api-links {
+    flex-direction: column;
+  }
+  
+  .api-links a {
+    text-align: center;
+  }
+}

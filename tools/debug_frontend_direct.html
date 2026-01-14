@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .result { margin: 10px 0; padding: 10px; background: #f5f5f5; }
+        .error { background: #ffebee; color: #c62828; }
+        .success { background: #e8f5e8; color: #2e7d32; }
+    </style>
+</head>
+<body>
+    <h1>Frontend Direct Debug Test</h1>
+    
+    <div class="test-section">
+        <h2>1. Frontend Accessibility Test</h2>
+        <div id="frontend-test"></div>
+        <button onclick="testFrontend()">Test Frontend</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. API Direct Test</h2>
+        <div id="api-test"></div>
+        <button onclick="testAPI()">Test API Endpoints</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. Frontend API Integration Test</h2>
+        <div id="integration-test"></div>
+        <button onclick="testIntegration()">Test Integration</button>
+    </div>
+
+    <script>
+        async function testFrontend() {
+            const container = document.getElementById('frontend-test');
+            container.innerHTML = '<div class="result">Testing frontend accessibility...</div>';
+            
+            try {
+                const response = await fetch('http://localhost:52692');
+                const html = await response.text();
+                
+                if (html.includes('Personal Timeline')) {
+                    container.innerHTML += '<div class="result success">✅ Frontend is accessible and serving HTML</div>';
+                    
+                    // Check if React bundle is loading
+                    if (html.includes('bundle.js')) {
+                        container.innerHTML += '<div class="result success">✅ React bundle.js is referenced</div>';
+                    } else {
+                        container.innerHTML += '<div class="result error">❌ React bundle.js not found</div>';
+                    }
+                    
+                    // Check if root div exists
+                    if (html.includes('id="root"')) {
+                        container.innerHTML += '<div class="result success">✅ React root div exists</div>';
+                    } else {
+                        container.innerHTML += '<div class="result error">❌ React root div not found</div>';
+                    }
+                } else {
+                    container.innerHTML += '<div class="result error">❌ Frontend not responding correctly</div>';
+                }
+            } catch (error) {
+                container.innerHTML += `<div class="result error">❌ Frontend test failed: ${error.message}</div>`;
+            }
+        }
+        
+        async function testAPI() {
+            const container = document.getElementById('api-test');
+            container.innerHTML = '<div class="result">Testing API endpoints...</div>';
+            
+            const endpoints = [
+                { url: 'http://localhost:8086/health', name: 'Health' },
+                { url: 'http://localhost:8086/stories', name: 'Stories' },
+                { url: 'http://localhost:8086/people', name: 'People' },
+                { url: 'http://localhost:8086/galleries', name: 'Galleries' }
+            ];
+            
+            for (const endpoint of endpoints) {
+                try {
+                    const response = await fetch(endpoint.url);
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        let details = '';
+                        if (endpoint.name === 'Stories' && data.count) {
+                            details = ` (${data.count} stories)`;
+                        } else if (endpoint.name === 'People' && data.count) {
+                            details = ` (${data.count} people)`;
+                        } else if (endpoint.name === 'Galleries' && data.total_photos) {
+                            details = ` (${data.total_photos} photos)`;
+                        }
+                        
+                        container.innerHTML += `<div class="result success">✅ ${endpoint.name}: Working${details}</div>`;
+                    } else {
+                        container.innerHTML += `<div class="result error">❌ ${endpoint.name}: HTTP ${response.status}</div>`;
+                    }
+                } catch (error) {
+                    container.innerHTML += `<div class="result error">❌ ${endpoint.name}: ${error.message}</div>`;
+                }
+            }
+        }
+        
+        async function testIntegration() {
+            const container = document.getElementById('integration-test');
+            container.innerHTML = '<div class="result">Testing frontend-API integration...</div>';
+            
+            try {
+                // Test if frontend can reach API
+                const response = await fetch('http://localhost:52692/static/js/bundle.js');
+                const bundleContent = await response.text();
+                
+                if (bundleContent.includes('localhost:8086')) {
+                    container.innerHTML += '<div class="result success">✅ Frontend is configured to connect to API (localhost:8086)</div>';
+                } else {
+                    container.innerHTML += '<div class="result error">❌ Frontend not configured for API connection</div>';
+                }
+                
+                // Test CORS
+                try {
+                    const apiResponse = await fetch('http://localhost:8086/health');
+                    if (apiResponse.ok) {
+                        container.innerHTML += '<div class="result success">✅ CORS is working - frontend can reach API</div>';
+                    }
+                } catch (corsError) {
+                    container.innerHTML += `<div class="result error">❌ CORS issue: ${corsError.message}</div>`;
+                }
+                
+            } catch (error) {
+                container.innerHTML += `<div class="result error">❌ Integration test failed: ${error.message}</div>`;
+            }
+        }
+        
+        // Auto-run tests
+        window.onload = function() {
+            setTimeout(() => {
+                testFrontend();
+                setTimeout(() => {
+                    testAPI();
+                    setTimeout(() => {
+                        testIntegration();
+                    }, 1000);
+                }, 1000);
+            }, 500);
+        };
+    </script>
+</body>
+</html>

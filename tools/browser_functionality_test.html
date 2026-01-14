@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Personal Archive - Browser Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .loading {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .data-display {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .app-link {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        .app-link:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎯 AI Personal Archive - Browser Functionality Test</h1>
+    
+    <div class="test-container">
+        <h2>🌐 Application Access</h2>
+        <p>Click the button below to open the main application:</p>
+        <a href="http://localhost:52692" target="_blank" class="app-link">
+            🚀 Open AI Personal Archive App
+        </a>
+        <p><strong>Expected:</strong> React application should load with navigation tabs and AI status badge</p>
+    </div>
+
+    <div class="test-container">
+        <h2>🔌 API Connectivity Tests</h2>
+        <button onclick="testAllEndpoints()">Test All API Endpoints</button>
+        <div id="api-results"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>👥 People Intelligence Test</h2>
+        <button onclick="testPeople()">Load People Data</button>
+        <div id="people-results"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>📖 Stories Test</h2>
+        <button onclick="testStories()">Load Stories</button>
+        <div id="stories-results"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>🎨 Galleries Test</h2>
+        <button onclick="testGalleries()">Load Photo Galleries</button>
+        <div id="galleries-results"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>💬 Chat System Test</h2>
+        <button onclick="testChat()">Test Chat</button>
+        <div id="chat-results"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>🎯 Q&A System Test</h2>
+        <button onclick="testQA()">Test Q&A</button>
+        <div id="qa-results"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8086';
+
+        function showResult(containerId, message, type = 'success') {
+            const container = document.getElementById(containerId);
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `test-result ${type}`;
+            resultDiv.innerHTML = message;
+            container.appendChild(resultDiv);
+        }
+
+        function showData(containerId, data) {
+            const container = document.getElementById(containerId);
+            const dataDiv = document.createElement('div');
+            dataDiv.className = 'data-display';
+            dataDiv.textContent = JSON.stringify(data, null, 2);
+            container.appendChild(dataDiv);
+        }
+
+        async function testEndpoint(endpoint, method = 'GET', payload = null) {
+            try {
+                const options = {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                };
+                
+                if (payload) {
+                    options.body = JSON.stringify(payload);
+                }
+
+                const response = await fetch(`${API_BASE}${endpoint}`, options);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    return { success: true, data: data };
+                } else {
+                    return { success: false, error: `HTTP ${response.status}` };
+                }
+            } catch (error) {
+                return { success: false, error: error.message };
+            }
+        }
+
+        async function testAllEndpoints() {
+            const container = document.getElementById('api-results');
+            container.innerHTML = '<div class="test-result loading">Testing API endpoints...</div>';
+
+            const endpoints = [
+                { path: '/status', name: 'AI Status' },
+                { path: '/health', name: 'Health Check' },
+                { path: '/people', name: 'People Data' },
+                { path: '/stories', name: 'Stories Data' },
+                { path: '/galleries', name: 'Galleries Data' }
+            ];
+
+            let successCount = 0;
+            container.innerHTML = '';
+
+            for (const endpoint of endpoints) {
+                const result = await testEndpoint(endpoint.path);
+                if (result.success) {
+                    showResult('api-results', `✅ ${endpoint.name}: Working`, 'success');
+                    successCount++;
+                } else {
+                    showResult('api-results', `❌ ${endpoint.name}: ${result.error}`, 'error');
+                }
+            }
+
+            const successRate = (successCount / endpoints.length * 100).toFixed(1);
+            showResult('api-results', `📊 API Test Results: ${successCount}/${endpoints.length} endpoints working (${successRate}%)`, 
+                      successRate >= 80 ? 'success' : 'error');
+        }
+
+        async function testPeople() {
+            const container = document.getElementById('people-results');
+            container.innerHTML = '<div class="test-result loading">Loading people data...</div>';
+
+            const result = await testEndpoint('/people');
+            container.innerHTML = '';
+
+            if (result.success) {
+                const count = result.data.count || 0;
+                showResult('people-results', `✅ People Detection: Found ${count} people`, 'success');
+                
+                if (count > 0) {
+                    const samplePerson = result.data.people[0];
+                    showResult('people-results', 
+                        `👤 Sample Person: ${samplePerson.id} with ${samplePerson.photo_count} photos`, 'success');
+                }
+                
+                showData('people-results', result.data);
+            } else {
+                showResult('people-results', `❌ People test failed: ${result.error}`, 'error');
+            }
+        }
+
+        async function testStories() {
+            const container = document.getElementById('stories-results');
+            container.innerHTML = '<div class="test-result loading">Loading stories...</div>';
+
+            const result = await testEndpoint('/stories');
+            container.innerHTML = '';
+
+            if (result.success) {
+                const count = result.data.count || 0;
+                showResult('stories-results', `✅ Stories: Found ${count} stories`, 'success');
+                
+                if (count > 0) {
+                    const sampleStory = result.data.stories[0];
+                    showResult('stories-results', 
+                        `📖 Sample Story: "${sampleStory.title}" with ${sampleStory.chapter_count} chapters`, 'success');
+                }
+                
+                showData('stories-results', result.data);
+            } else {
+                showResult('stories-results', `❌ Stories test failed: ${result.error}`, 'error');
+            }
+        }
+
+        async function testGalleries() {
+            const container = document.getElementById('galleries-results');
+            container.innerHTML = '<div class="test-result loading">Loading galleries...</div>';
+
+            const result = await testEndpoint('/galleries');
+            container.innerHTML = '';
+
+            if (result.success) {
+                const totalPhotos = result.data.total_photos || 0;
+                const galleryCount = result.data.galleries ? result.data.galleries.length : 0;
+                
+                showResult('galleries-results', 
+                    `✅ Galleries: ${totalPhotos} photos in ${galleryCount} galleries`, 'success');
+                
+                showData('galleries-results', result.data);
+            } else {
+                showResult('galleries-results', `❌ Galleries test failed: ${result.error}`, 'error');
+            }
+        }
+
+        async function testChat() {
+            const container = document.getElementById('chat-results');
+            container.innerHTML = '<div class="test-result loading">Testing chat system...</div>';
+
+            const testMessage = "Hello! Can you tell me about my personal data?";
+            const result = await testEndpoint('/chat', 'POST', { message: testMessage });
+            container.innerHTML = '';
+
+            if (result.success) {
+                showResult('chat-results', `✅ Chat System: Working`, 'success');
+                showResult('chat-results', `💬 Response: ${result.data.response}`, 'success');
+                showData('chat-results', result.data);
+            } else {
+                showResult('chat-results', `❌ Chat test failed: ${result.error}`, 'error');
+            }
+        }
+
+        async function testQA() {
+            const container = document.getElementById('qa-results');
+            container.innerHTML = '<div class="test-result loading">Testing Q&A system...</div>';
+
+            const testQuery = "How many photos do I have?";
+            const result = await testEndpoint('/qa', 'POST', { query: testQuery });
+            container.innerHTML = '';
+
+            if (result.success) {
+                showResult('qa-results', `✅ Q&A System: Working`, 'success');
+                if (result.data.answer) {
+                    showResult('qa-results', `🎯 Answer: ${result.data.answer}`, 'success');
+                }
+                if (result.data.confidence) {
+                    showResult('qa-results', `📊 Confidence: ${result.data.confidence}`, 'success');
+                }
+                showData('qa-results', result.data);
+            } else {
+                showResult('qa-results', `❌ Q&A test failed: ${result.error}`, 'error');
+            }
+        }
+
+        // Auto-run API test on page load
+        window.onload = function() {
+            setTimeout(testAllEndpoints, 1000);
+        };
+    </script>
+</body>
+</html>

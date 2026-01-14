@@ -1,7 +1,7 @@
 
 
 
-# Simple single-stage Dockerfile for QA service
+# Simple single-stage Dockerfile for QA service with UV
 FROM python:3.10-slim
 
 # Install system dependencies
@@ -12,13 +12,19 @@ RUN apt-get update && apt-get install -y \
     libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
+# Install UV
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.local/bin:$PATH"
+
 WORKDIR /app
 
-# Copy requirements first (for better caching)
-COPY src/requirements.txt .
+# Copy project files for UV
+COPY pyproject.toml uv.lock ./
+COPY README.md .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install dependencies with UV (with pip fallback)
+RUN uv sync --frozen || (echo "UV failed, falling back to pip" && \
+    pip install --no-cache-dir -e .)
 
 # Copy application code
 COPY . .
@@ -26,7 +32,7 @@ COPY . .
 # Create data directory
 RUN mkdir -p /app/MyData/app_data || true
 
-# Set environment variables (can be overridden by docker-compose)
+# Set environment variables (can be overridden by docker compose)
 ENV APP_DATA_DIR=/app/MyData/app_data
 
 # Expose port

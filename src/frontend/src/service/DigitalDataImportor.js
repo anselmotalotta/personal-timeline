@@ -26,12 +26,19 @@ const importDigitalData = (tracks, setTracks, setSelectedDateRange, toast) => {
 };
 
 const _importDigitalData = async (tracks, setTracks, setSelectedDateRange, toast) => {
+    console.log('📊 Starting digital data import...');
+    console.log('🔧 Toast status:', toast?.current ? 'available' : 'null');
+    
     let data_sources = ['books.json', 'exercise.json', 'purchase.json', 'streaming.json', 'places.json', 'trips.json', 'photos.json'];
     let new_tracks = [...tracks]
     let dates = [];
 
+    console.log(`📁 Processing ${data_sources.length} data sources...`);
+
     for (let data_id = 0; data_id < data_sources.length; data_id++) {
       let data = null;
+      const dataSource = data_sources[data_id];
+      console.log(`🔄 Loading ${dataSource}...`);
 
       try {
         data = await (
@@ -39,10 +46,18 @@ const _importDigitalData = async (tracks, setTracks, setSelectedDateRange, toast
           // Fetching the data from the personal-data folder
           await fetch('digital_data/personal-data/app_data/' + data_sources[data_id])
         ).json();
+        console.log(`✅ Loaded ${dataSource}: ${data.length} entries`);
       } catch (error) {
-        data = await (
-          await fetch('digital_data/' + data_sources[data_id].replace('.json', '.sampled.json'))
-        ).json();
+        console.log(`⚠️ ${dataSource} not found, trying sample data...`);
+        try {
+          data = await (
+            await fetch('digital_data/' + data_sources[data_id].replace('.json', '.sampled.json'))
+          ).json();
+          console.log(`✅ Loaded sample ${dataSource}: ${data.length} entries`);
+        } catch (sampleError) {
+          console.error(`❌ Failed to load ${dataSource}:`, sampleError);
+          continue;
+        }
       }
       
       let track_name = data_sources[data_id].split('.')[0];
@@ -124,16 +139,37 @@ const _importDigitalData = async (tracks, setTracks, setSelectedDateRange, toast
     let maxDate = new Date(Math.max.apply(null, dates));
     let minDate = new Date(Math.min.apply(null, dates));
     // maxDate = new Date(Math.min.apply(null, [addDays(minDate, 180), maxDate]))
+    
+    console.log(`📅 Date range: ${minDate.toDateString()} to ${maxDate.toDateString()}`);
     setSelectedDateRange([minDate, maxDate]);
 
+    console.log(`✅ Data import complete: ${new_tracks.length} tracks loaded`);
     setTracks(new_tracks)
-    toast.current.show({ severity: 'success', summary: 'Success', detail: 'Digital Data Uploaded' });
+    
+    // Safe toast notifications
+    if (toast?.current?.show) {
+      toast.current.show({ severity: 'success', summary: 'Success', detail: 'Digital Data Uploaded' });
+    } else {
+      console.log('📢 Digital Data Uploaded (toast not available)');
+    }
+    
     // launch QA engine
+    console.log('🚀 Launching QA engine...');
     fetch(config.API_URL + "/launch?" + new URLSearchParams({dataset: "Digital"})).then((response) => response.json())
     .then((data) => {
-      toast.current.show({ severity: 'success', summary: 'Success', detail: 'QA engine for Digital Data is ready!' });
+      console.log('✅ QA engine launched successfully');
+      if (toast?.current?.show) {
+        toast.current.show({ severity: 'success', summary: 'Success', detail: 'QA engine for Digital Data is ready!' });
+      } else {
+        console.log('📢 QA engine for Digital Data is ready! (toast not available)');
+      }
     }).catch(error => {
-      toast.current.show({ severity: 'error', summary: 'Error', detail: 'QA Engine not loaded.' });
+      console.error('❌ QA Engine failed to load:', error);
+      if (toast?.current?.show) {
+        toast.current.show({ severity: 'error', summary: 'Error', detail: 'QA Engine not loaded.' });
+      } else {
+        console.log('📢 QA Engine not loaded (toast not available)');
+      }
     })
 };
 

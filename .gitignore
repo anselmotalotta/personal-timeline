@@ -10,3 +10,7 @@ MyData/
 env/
 node_modules/
 *.log
+.hypothesis/
+.env
+.vscode/
+

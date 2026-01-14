@@ -218,8 +218,8 @@ npm start
 The `src/requirements.txt` has been updated, so the Docker build should now work:
 
 ```bash
-docker-compose build backend
-docker-compose up backend
+docker compose build backend
+docker compose up backend
 ```
 
 **Note**: Frontend and QA services may need Node.js/Python dependency updates if you encounter issues.

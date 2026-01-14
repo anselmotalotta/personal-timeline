@@ -1,0 +1,298 @@
+{
+  "timestamp": "2026-01-08T04:35:25.721006",
+  "overall_status": "PASS",
+  "summary": {
+    "total_categories": 9,
+    "passed_categories": 9,
+    "failed_categories": 0,
+    "success_rate": "100.0%"
+  },
+  "detailed_results": {
+    "ai_configuration": {
+      "status": "PASS",
+      "tests": {
+        "has_openai_key": true,
+        "has_anthropic_key": false,
+        "has_google_key": false,
+        "provider_hierarchy_exists": true,
+        "data_path_exists": true,
+        "api_timeout_set": true
+      },
+      "score": "4/6",
+      "details": {
+        "openai_configured": true,
+        "provider_count": 3,
+        "data_path": "MyData"
+      }
+    },
+    "ai_providers": {
+      "status": "PASS",
+      "tests": {
+        "openai_exists": true,
+        "openai_has_status": true,
+        "openai_has_priority": true,
+        "anthropic_exists": true,
+        "anthropic_has_status": true,
+        "anthropic_has_priority": true,
+        "google_exists": true,
+        "google_has_status": true,
+        "google_has_priority": true,
+        "get_provider_status_works": true,
+        "has_provider_hierarchy": true,
+        "providers_dict_exists": true,
+        "hierarchy_valid": true
+      },
+      "score": "13/13",
+      "provider_status": {
+        "openai": {
+          "status": "unavailable",
+          "priority": 1,
+          "quality": "excellent",
+          "cost_tier": "high",
+          "has_credentials": true,
+          "last_error": null
+        },
+        "anthropic": {
+          "status": "unavailable",
+          "priority": 2,
+          "quality": "excellent",
+          "cost_tier": "high",
+          "has_credentials": false,
+          "last_error": null
+        },
+        "google": {
+          "status": "unavailable",
+          "priority": 3,
+          "quality": "good",
+          "cost_tier": "medium",
+          "has_credentials": false,
+          "last_error": null
+        }
+      },
+      "available_providers": []
+    },
+    "ai_api_endpoints": {
+      "status": "PASS",
+      "score": "5/5",
+      "endpoints": {
+        "/status": {
+          "status_code": 200,
+          "success": true,
+          "has_json": true,
+          "response_size": 258,
+          "description": "AI status endpoint",
+          "json_valid": true,
+          "response_keys": [
+            "ai_status",
+            "ai_message",
+            "status_color",
+            "available_providers",
+            "total_providers",
+            "features"
+          ]
+        },
+        "/health": {
+          "status_code": 200,
+          "success": true,
+          "has_json": true,
+          "response_size": 2558,
+          "description": "Health check endpoint",
+          "json_valid": true,
+          "response_keys": [
+            "timestamp",
+            "overall_status",
+            "services",
+            "system_info",
+            "data_status",
+            "api_status"
+          ]
+        },
+        "/providers": {
+          "status_code": 200,
+          "success": true,
+          "has_json": true,
+          "response_size": 813,
+          "description": "Provider information",
+          "json_valid": true,
+          "response_keys": [
+            "providers",
+            "hierarchy",
+            "setup_instructions"
+          ]
+        },
+        "/usage/summary": {
+          "status_code": 200,
+          "success": true,
+          "has_json": true,
+          "response_size": 635,
+          "description": "Usage summary",
+          "json_valid": true,
+          "response_keys": [
+            "period_days",
+            "summary",
+            "cost_breakdown",
+            "recommendations"
+          ]
+        },
+        "/metrics": {
+          "status_code": 200,
+          "success": true,
+          "has_json": true,
+          "response_size": 808,
+          "description": "Service metrics",
+          "json_valid": true,
+          "response_keys": [
+            "timestamp",
+            "uptime_info",
+            "usage_metrics",
+            "provider_metrics",
+            "service_counts"
+          ]
+        }
+      },
+      "summary": {
+        "total_tested": 5,
+        "successful": 5,
+        "failed": 0
+      }
+    },
+    "data_processing": {
+      "status": "PASS",
+      "tests": {
+        "processor_created": true,
+        "has_data_path": true,
+        "data_path_exists": true,
+        "facebook_processing": true
+      },
+      "score": "4/4",
+      "processor_type": "LocalDataProcessor",
+      "available_methods": [
+        "ensure_data_privacy",
+        "ensure_secure_permissions",
+        "extract_photo_metadata",
+        "get_processing_status",
+        "process_apple_health",
+        "process_facebook_data",
+        "process_google_photos",
+        "process_location_data"
+      ]
+    },
+    "people_intelligence": {
+      "status": "PASS",
+      "tests": {
+        "service_exists": true,
+        "has_db_path": true,
+        "has_detect_method": false,
+        "has_analyze_method": true,
+        "has_status_method": true,
+        "status_callable": true,
+        "status_returns_dict": true,
+        "has_statistics": true
+      },
+      "score": "7/8",
+      "service_methods": [
+        "analyze_relationships",
+        "detect_faces",
+        "generate_person_insights",
+        "get_all_people",
+        "get_person_by_id",
+        "get_relationships_for_person",
+        "get_service_status",
+        "update_privacy_settings"
+      ]
+    },
+    "story_generation": {
+      "status": "PASS",
+      "tests": {
+        "service_exists": true,
+        "has_db_path": true,
+        "has_generate_method": false,
+        "has_status_method": true,
+        "has_list_method": false,
+        "status_callable": true,
+        "status_returns_dict": true,
+        "has_statistics": true
+      },
+      "score": "6/8",
+      "service_methods": [
+        "delete_story",
+        "generate_chronological_story",
+        "generate_people_story",
+        "generate_place_story",
+        "generate_thematic_story",
+        "get_all_stories",
+        "get_service_status",
+        "get_story_by_id"
+      ]
+    },
+    "usage_tracking": {
+      "status": "PASS",
+      "tests": {
+        "tracker_exists": true,
+        "has_db_path": true,
+        "has_record_method": true,
+        "has_summary_method": true,
+        "has_cleanup_method": true,
+        "summary_callable": true,
+        "summary_returns_dict": true,
+        "has_total_section": true,
+        "has_total_calls": true,
+        "has_total_cost": true,
+        "record_usage_works": true
+      },
+      "score": "11/11",
+      "tracker_methods": [
+        "cleanup_old_records",
+        "export_usage_data",
+        "get_daily_usage",
+        "get_usage_summary",
+        "record_usage"
+      ]
+    },
+    "health_monitoring": {
+      "status": "PASS",
+      "tests": {
+        "monitor_exists": true,
+        "has_health_check": true,
+        "has_metrics_method": true,
+        "health_check_callable": true,
+        "health_check_returns_dict": true,
+        "has_overall_status": true,
+        "has_services": true,
+        "metrics_callable": true,
+        "metrics_returns_dict": true
+      },
+      "score": "9/9",
+      "monitor_methods": [
+        "comprehensive_health_check",
+        "get_last_health_status",
+        "get_service_metrics"
+      ]
+    },
+    "frontend_integration": {
+      "status": "PASS",
+      "tests": {
+        "status_accessible": true,
+        "status_json_valid": true,
+        "status_has_ai_status": true,
+        "status_has_features": true,
+        "status_has_providers": true,
+        "health_accessible": true,
+        "health_json_valid": true,
+        "health_has_overall_status": true,
+        "providers_accessible": true,
+        "providers_json_valid": true,
+        "usage_summary_accessible": true,
+        "usage_summary_json_valid": true,
+        "cors_options_works": false,
+        "has_cors_origin": false,
+        "has_cors_methods": false
+      },
+      "score": "12/15",
+      "ai_service_url": "http://127.0.0.1:8087",
+      "cors_enabled": false
+    }
+  },
+  "ai_service_url": "http://127.0.0.1:8087",
+  "test_data_location": "test_data"
+}
