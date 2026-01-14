@@ -26,6 +26,10 @@ This enhanced version transforms the original Personal Timeline into an intellig
 - **👤 User Control**: Complete control over sensitive content and exclusions
 - **📊 Privacy Monitoring**: Comprehensive privacy compliance tracking
 
+## Notes from the human
+
+Despite the bold claims, almost no new feature really works as intended. But the UI is improved, the timeline works better than before, and a lot of ideas, fully documented and with code mocks are there to be picked up.
+
 ## 🎯 Quick Start
 
 ### Option 1: Full AI-Augmented Experience (Recommended)
